@@ -46,4 +46,9 @@ public class PlantJob : Job
 
         Addition = this.DestinationTile.addition;
     }
+
+    public override Skills GetJobType()
+    {
+        return Skills.Planting;
+    }
 }

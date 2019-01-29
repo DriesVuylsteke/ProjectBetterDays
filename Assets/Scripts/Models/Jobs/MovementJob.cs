@@ -16,4 +16,9 @@ class MovementJob : Job
     {
         JobComplete();
     }
+
+    public override Skills GetJobType()
+    {
+        return Skills.Speed;
+    }
 }

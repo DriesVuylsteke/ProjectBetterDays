@@ -4,9 +4,11 @@ using UnityEngine;
 public class BuildAdditionState : BuildState
 {
 	TileAddition proto;
-	public BuildAdditionState (MouseController mouseController, BuildController controller, TileAddition prototype) : base(mouseController, controller)
+    Skills requiredSkill;
+	public BuildAdditionState (MouseController mouseController, BuildController controller, TileAddition prototype, Skills requiredSkill) : base(mouseController, controller)
 	{
 		proto = prototype;
+        this.requiredSkill = requiredSkill;
 	}
 
 
@@ -50,7 +52,22 @@ public class BuildAdditionState : BuildState
 		else {
 			TileAddition addition = proto.Clone (tile);
 			if (tile.InstallAddition (addition)) { // We can install the addition on the tile, so lets add a job to build it
-				world.Jobs.OfferConstructionJob (new ConstructionJob (addition));
+                switch (requiredSkill)
+                {
+                    case Skills.Construction:
+                        world.Jobs.OfferConstructionJob(new ConstructionJob(addition));
+                        break;
+                    case Skills.Planting:
+                        world.Jobs.OfferPlantJob(new PlantJob(addition));
+                        break;
+                    case Skills.Harvesting:
+                        world.Jobs.OfferHarvestJob(new HarvestJob(addition));
+                        break;
+                    default:
+                        Debug.LogError("Don't know how to create a job for this skill");
+                        break;
+                }
+				
 			} else {
 				Debug.Log("Can't install " + addition.Name + " at the tile" + addition.tile.ToString());
 			}

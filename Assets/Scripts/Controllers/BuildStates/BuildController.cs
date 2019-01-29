@@ -160,28 +160,28 @@ public class BuildController : MonoBehaviour {
 	}
 
 	public void BuildMode_Wall(){
-		State = new BuildAdditionState (mouseController, this, new Wall(null));
+		State = new BuildAdditionState (mouseController, this, new Wall(null), Skills.Construction);
 	}
 
 	public void BuildMode_Door(){
-		State = new BuildAdditionState (mouseController, this, new Door(null));
+		State = new BuildAdditionState (mouseController, this, new Door(null), Skills.Construction);
 	}
 
 	public void BuildMode_BulldozeAddition(){
-		State = new BuildAdditionState (mouseController, this, null);
+		State = new BuildAdditionState (mouseController, this, null, Skills.Construction);
 	}
 
 	public void BuildMode_OxygenGenerator(){
-		State = new BuildAdditionState (mouseController, this, new OxygenGenerator(null));
+		State = new BuildAdditionState (mouseController, this, new OxygenGenerator(null), Skills.Construction);
 	}
 
     public void BuildMode_Soil()
     {
-        State = new BuildAdditionState(mouseController, this, new Soil(null));
+        State = new BuildAdditionState(mouseController, this, new Soil(null), Skills.Planting);
     }
 
     public void BuildMode_Tomato()
     {
-        State = new BuildAdditionState(mouseController, this, new Tomato(null));
+        State = new BuildAdditionState(mouseController, this, new Tomato(null), Skills.Planting);
     }
 }

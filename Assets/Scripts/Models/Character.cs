@@ -25,57 +25,53 @@ public class Character {
 	}
 
 
-    protected Dictionary<string, float> stats;
-    #region Statistics
-    protected string speedKey = "Speed";
+    protected Dictionary<Skills, float> stats;
+    #region Skills
     public float Speed
     {
         get
         {
-            return stats[speedKey];
+            return stats[Skills.Speed];
         }
         protected set
         {
-            stats[speedKey] = value;
+            stats[Skills.Speed] = value;
         }
     }
 
-    protected string constructionKey = "Construction";
     public float Construction
     {
         get
         {
-            return stats[constructionKey];
+            return stats[Skills.Construction];
         }
         protected set
         {
-            stats[constructionKey] = value;
+            stats[Skills.Construction] = value;
         }
     }
 
-    protected string plantingKey = "Planting";
     public float Planting
     {
         get
         {
-            return stats[plantingKey];
+            return stats[Skills.Planting];
         }
         protected set
         {
-            stats[plantingKey] = value;
+            stats[Skills.Planting] = value;
         }
     }
 
-    protected string harvestingKey = "Harvesting";
     public float Harvesting
     {
         get
         {
-            return stats[harvestingKey];
+            return stats[Skills.Harvesting];
         }
         protected set
         {
-            stats[harvestingKey] = value;
+            stats[Skills.Harvesting] = value;
         }
     }
     #endregion
@@ -156,11 +152,11 @@ public class Character {
 
 	public Character(Tile tile, World world, float speed = 1, float construction = 1, float planting = 1, float harvesting = 1)
     {
-        stats = new Dictionary<string, float>();
-        stats.Add(speedKey, speed);
-        stats.Add(constructionKey, construction);
-        stats.Add(plantingKey, planting);
-        stats.Add(harvestingKey, harvesting);
+        stats = new Dictionary<Skills, float>();
+        stats.Add(Skills.Speed, speed);
+        stats.Add(Skills.Construction, construction);
+        stats.Add(Skills.Planting, planting);
+        stats.Add(Skills.Harvesting, harvesting);
 
         this.Speed = speed;
         this.world = world;
@@ -175,7 +171,7 @@ public class Character {
     /// Gives the player stats
     /// </summary>
     /// <returns>The player stats</returns>
-    public Dictionary<string, float> GetPlayerStats() { return stats; }
+    public Dictionary<Skills, float> GetPlayerStats() { return stats; }
 
 	/// <summary>
 	/// Attempts to select the character for actions
@@ -236,7 +232,14 @@ public class Character {
 			// We have reached our destination :)
 			// do work on the current job
 			if (CurrentJob != null) {
-				CurrentJob.DoWork (deltaTime);
+                // This is also where we gain experience for the work done
+                Skills jobSkill = CurrentJob.GetJobType();
+                float skillLvl = stats[jobSkill];
+                // TODO: make something balanced here, for now one minute of work = 1 level, two minutes of work = level 3
+                float workAmount = deltaTime * skillLvl;
+                float xpAmount = deltaTime / (skillLvl * 60);
+				CurrentJob.DoWork (workAmount);
+                stats[jobSkill] += xpAmount;
 			}
 
 			// If we don't have a job look for one
@@ -244,10 +247,14 @@ public class Character {
                 // Request a job from the world
                 // TODO: subclass this so different characters can request different jobs
                 // TODO: this gets spammed if there are no jobs, perhaps make the character idle for a couple seconds? Could also be a job!
+                // TODO: move this request into the job queue, should probably pass your own preferences of jobs in that function too
                 Job j = world.Jobs.RequestConstructionJob();
                 if(j == null)
                 {
                     j = world.Jobs.RequestHarvestJob();
+                } if(j == null)
+                {
+                    j = world.Jobs.RequestPlantJob();
                 }
                 OverrideJob(j);
 

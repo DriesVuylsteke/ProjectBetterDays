@@ -45,5 +45,10 @@ public class ConstructionJob : Job
 
         Addition = this.DestinationTile.addition;
     }
+
+    public override Skills GetJobType()
+    {
+        return Skills.Construction;
+    }
 }
 

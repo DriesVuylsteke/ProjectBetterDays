@@ -54,6 +54,12 @@ public abstract class Job {
         }
     }
 
+    /// <summary>
+    /// Gives the skill type of the job
+    /// </summary>
+    /// <returns></returns>
+    public abstract Skills GetJobType();
+
     protected virtual void OnJobCancelled(Job job) { }
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
