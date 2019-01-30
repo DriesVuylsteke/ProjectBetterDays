@@ -285,6 +285,7 @@ public class Character {
 
 	void OnJobComplete(Job job){
 		if (job == CurrentJob) {
+            Debug.Log("Job completed");
             CurrentJob = null;
 			DestTile = CurrTile;
 			jobReached = false;

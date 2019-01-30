@@ -29,7 +29,7 @@ public class CharacterSpriteController : MonoBehaviour {
         if (world.GetCharacters().Count == 0)
         {
             CreateCharacter(50, 50);
-            CreateCharacter(52, 50);
+            //CreateCharacter(52, 50);
         }
         else
         {

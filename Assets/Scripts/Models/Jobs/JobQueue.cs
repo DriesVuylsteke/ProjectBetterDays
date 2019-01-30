@@ -110,7 +110,6 @@ public class JobQueue
 
     public PlantJob RequestPlantJob()
     {
-        Debug.Log("Requesting plant job");
         if (plantJobs.Count > 0)
         {
             PlantJob pj = plantJobs.Dequeue();

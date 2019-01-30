@@ -79,7 +79,7 @@ public abstract class Plant : TileAddition
         harvestJob.OnJobCancel += (job) => { QueueHarvest(); };
         harvestJob.OnJobComplete += (job) =>
         {
-           
+            PlantHarvested(job);
         };
         tile.world.Jobs.OfferHarvestJob(harvestJob);
     }

@@ -46,7 +46,7 @@ public class Tomato : Plant
     {
         Debug.Log("Harvesting plant");
         tile.RemoveTileAddition();
-        tile.InstallAddition(new Tomato(tile), true);
+        tile.InstallAddition(new Tomato(tile));
         // also give the player the plants fruits perhaps?
         // Probably should have a setter for a "job reward" that gets passed to the entity that complets the job
         // Worries for later, for now lets just have the player come to the plant and harvest it

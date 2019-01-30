@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using UnityEngine;
 
 public class PlantJob : Job
 {
@@ -13,7 +14,14 @@ public class PlantJob : Job
             addition.TileAdditionRemoved += TileAdditionRemoved;
             DestinationTile = addition.tile;
         }
-            
+
+        addition.TileAdditionBuilt += Addition_TileAdditionBuilt;
+    }
+
+    private void Addition_TileAdditionBuilt(TileAddition obj)
+    {
+        JobComplete();
+        Addition.TileAdditionBuilt -= Addition_TileAdditionBuilt;
     }
 
     protected void TileAdditionRemoved(TileAddition addition)
@@ -23,10 +31,7 @@ public class PlantJob : Job
 
     public override void DoWork(float amount)
     {
-        if (Addition.DoWork(amount) >= 1)
-        {
-            JobComplete();
-        }
+        Addition.DoWork(amount);
     }
 
     protected override void OnJobCancelled(Job job)
