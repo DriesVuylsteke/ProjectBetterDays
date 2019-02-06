@@ -23,6 +23,8 @@ public abstract class Job {
 
 	public abstract void DoWork (float amount);
 
+    public abstract Job Clone();
+
 	/// <summary>
 	/// Called when the job is complete, probably from a subclass
 	/// </summary>

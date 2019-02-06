@@ -26,6 +26,7 @@ public class Character {
 
 
     protected Dictionary<Skills, float> stats;
+
     #region Skills
     public float Speed
     {
@@ -335,10 +336,14 @@ public class Character {
 
 		writer.WriteStartElement ("Character");
 
-		// speed
-		writer.WriteAttributeString ("Speed", Speed.ToString());
-		// currtile -- x and y position
-		writer.WriteAttributeString ("X", currTile.X.ToString());
+        // speed
+        writer.WriteAttributeString("Speed", Speed.ToString());
+        writer.WriteAttributeString("Construction", Construction.ToString());
+        writer.WriteAttributeString("Planting", Planting.ToString());
+        writer.WriteAttributeString("Harvesting", Harvesting.ToString());
+
+        // currtile -- x and y position
+        writer.WriteAttributeString ("X", currTile.X.ToString());
 		writer.WriteAttributeString ("Y", currTile.Y.ToString());
 
         if (CurrentJob != null)
@@ -354,7 +359,10 @@ public class Character {
     /// Reads the caracter specific properties
     /// </summary>
 	public void ReadXml(XmlReader reader){
-        int speed = int.Parse(reader.GetAttribute("Speed"));
+        Speed = float.Parse(reader.GetAttribute("Speed"));
+        Construction = float.Parse(reader.GetAttribute("Construction"));
+        Planting = float.Parse(reader.GetAttribute("Planting"));
+        Harvesting = float.Parse(reader.GetAttribute("Harvesting"));
     }
     #endregion
 }

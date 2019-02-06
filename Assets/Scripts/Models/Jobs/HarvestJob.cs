@@ -54,5 +54,10 @@ public class HarvestJob : Job
     {
         return Skills.Harvesting;
     }
+
+    public override Job Clone()
+    {
+        return new HarvestJob(Addition);
+    }
 }
 

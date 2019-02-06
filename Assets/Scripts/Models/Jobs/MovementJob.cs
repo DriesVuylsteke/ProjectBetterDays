@@ -12,6 +12,11 @@ class MovementJob : Job
         StandOnDestination = true;
     }
 
+    public override Job Clone()
+    {
+        return new MovementJob(DestinationTile);
+    }
+
     public override void DoWork(float amount)
     {
         JobComplete();

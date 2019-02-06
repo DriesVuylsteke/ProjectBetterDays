@@ -181,7 +181,21 @@ public class JobQueue
         writer.WriteStartElement("JobQueue");
 
         writer.WriteStartElement("ConstructionJobs");
-        foreach(ConstructionJob job in constructionJobs)
+        foreach (ConstructionJob job in constructionJobs)
+        {
+            job.WriteXml(writer);
+        }
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("HarvestJobs");
+        foreach (HarvestJob job in harvestJobs)
+        {
+            job.WriteXml(writer);
+        }
+        writer.WriteEndElement();
+
+        writer.WriteStartElement("PlantJobs");
+        foreach (PlantJob job in plantJobs)
         {
             job.WriteXml(writer);
         }
@@ -192,24 +206,33 @@ public class JobQueue
 
     public void ReadXml(XmlReader reader, World world)
     {
-        // The order of reading is important, construction jobs always come first
-        if (reader.ReadToDescendant("ConstructionJobs"))
+        reader.ReadToDescendant("ConstructionJobs");
+        ReadJobList("ConstructionJobs", constructionJobs, reader, world, new ConstructionJob(null));
+        reader.ReadToNextSibling("HarvestJobs");
+        Debug.Log(reader.Name);
+        ReadJobList("HarvestJobs", harvestJobs, reader, world, new HarvestJob(null));
+        reader.ReadToNextSibling("PlantJobs");
+        Debug.Log(reader.Name);
+        ReadJobList("PlantJobs", plantJobs, reader, world, new PlantJob(null));
+    }
+
+    private void ReadJobList<T>(string name, Queue<T> jobList, XmlReader reader, World world, T instanceToClone) where T : Job
+    {
+        // Read the construction jobs if there are any
+        Debug.Log("Reading " + name + " Jobs");
+        int count = 0;
+        if (reader.ReadToDescendant("Job"))
         {
-            Debug.Log("Reading Construction Jobs");
-            int count = 0;
-            if (reader.ReadToDescendant("Job"))
-            {
-                // We have at least one job to read
-                do
-                { // Read it while there are more jobs to read
-                    ConstructionJob job = new ConstructionJob(null);
-                    job.ReadXml(reader, world);
-                    constructionJobs.Enqueue(job);
-                    count++;
-                } while (reader.ReadToNextSibling("Job"));
-            }
-            Debug.Log("Read " + count + " Construction jobs");
+            // We have at least one job to read
+            do
+            { // Read it while there are more jobs to read
+                T job = (T)instanceToClone.Clone();
+                job.ReadXml(reader, world);
+                jobList.Enqueue(job);
+                count++;
+            } while (reader.ReadToNextSibling("Job"));
         }
+        Debug.Log("Read " + count + " " + name + " jobs");
     }
 
     protected virtual void WriteAdditionalXmlProperties(XmlWriter writer)

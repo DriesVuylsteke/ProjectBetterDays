@@ -12,10 +12,9 @@ public class PlantJob : Job
         if (addition != null)
         {
             addition.TileAdditionRemoved += TileAdditionRemoved;
+            addition.TileAdditionBuilt += Addition_TileAdditionBuilt;
             DestinationTile = addition.tile;
         }
-
-        addition.TileAdditionBuilt += Addition_TileAdditionBuilt;
     }
 
     private void Addition_TileAdditionBuilt(TileAddition obj)
@@ -55,5 +54,10 @@ public class PlantJob : Job
     public override Skills GetJobType()
     {
         return Skills.Planting;
+    }
+
+    public override Job Clone()
+    {
+        return new PlantJob(Addition);
     }
 }

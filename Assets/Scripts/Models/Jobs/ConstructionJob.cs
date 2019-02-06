@@ -50,5 +50,10 @@ public class ConstructionJob : Job
     {
         return Skills.Construction;
     }
+
+    public override Job Clone()
+    {
+        return new ConstructionJob(Addition);
+    }
 }
 
