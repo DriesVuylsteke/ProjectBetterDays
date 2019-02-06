@@ -6,8 +6,11 @@ public class TileSpriteController : MonoBehaviour {
 
 	Dictionary<Tile, GameObject> TileGOMap;
 	Dictionary<Tile, GameObject> additionGOMap;
-	Dictionary<string, Sprite> tileSprites;
+    Dictionary<Tile, GameObject> itemStackGOMap;
+
+    Dictionary<string, Sprite> tileSprites;
 	Dictionary<string, Sprite> additionSprites;
+    Dictionary<string, Sprite> itemSprites;
 
 	World world { get { return WorldController.instance.world; } }
 
@@ -20,11 +23,14 @@ public class TileSpriteController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		TileGOMap = new Dictionary<Tile, GameObject> ();
-		additionGOMap = new Dictionary<Tile, GameObject> ();
-		tileSprites = new Dictionary<string, Sprite> ();
-		additionSprites = new Dictionary<string, Sprite> ();
+        additionGOMap = new Dictionary<Tile, GameObject>();
+        itemStackGOMap = new Dictionary<Tile, GameObject>();
 
-		LoadSprites ();
+        tileSprites = new Dictionary<string, Sprite>();
+        additionSprites = new Dictionary<string, Sprite>();
+        itemSprites = new Dictionary<string, Sprite>();
+
+        LoadSprites ();
 
 		// Set up gameobjects for all tiles in the world
 		// We will not create tiles after this point, ONLY edit them
@@ -45,11 +51,14 @@ public class TileSpriteController : MonoBehaviour {
 
 				tile_data.OnTileTypeChanged += OnTileTypeChanged;
 				tile_data.OnTileAdditionChanged += OnTileAdditionChanged;
+                tile_data.OnItemStackTypeChanged += OnTileItemStackChanged;
+
+                tile_data.ForceItemStackChangedEvent();
 
 				// force trigger the events upon creation so we can properly render them (the world creates and fires the events before the controller exists)
-				if (tile_data.addition != null) {
-					OnTileAdditionChanged (tile_data, null, tile_data.addition);
-					OnTileAdditionWorkDone (tile_data.addition);
+				if (tile_data.Addition != null) {
+					OnTileAdditionChanged (tile_data, null, tile_data.Addition);
+					OnTileAdditionWorkDone (tile_data.Addition);
 				}
 			}
 		}
@@ -95,13 +104,48 @@ public class TileSpriteController : MonoBehaviour {
 		OnTileAdditionWorkDone(newAddition);
 	}
 
-	public Sprite GetSprite(string spriteName){
+    // Listens to the tile for when the ItemStack changes and requires a visual update
+    void OnTileItemStackChanged(Tile tile, ItemStack stack)
+    {
+
+        if (stack == null)
+        {
+            // No stack is present here anymore, just disable the SR for now (no need to delete the game object, we might need it later?)
+            if (itemStackGOMap.ContainsKey(tile) == false)
+            {
+                return;
+            }
+            itemStackGOMap[tile].GetComponent<SpriteRenderer>().sprite = null;
+            return;
+        }
+
+        if (itemStackGOMap.ContainsKey(tile) == false)
+        {
+            // There is no gameobject yet to visualise the ItemStack on this tile
+            GameObject itemStackGO = new GameObject();
+            itemStackGOMap.Add(tile, itemStackGO);
+            itemStackGO.name = "ItemStack_" + tile.X + "_" + tile.Y;
+            itemStackGO.transform.position = new Vector3(tile.X, tile.Y, 0);
+            itemStackGO.transform.SetParent(TileGOMap[tile].transform);
+
+            SpriteRenderer sr = itemStackGO.AddComponent<SpriteRenderer>();
+            sr.sprite = GetSprite(stack == null? "" : "Item_" + stack.GetStackType());
+            sr.sortingLayerName = "ItemStacks";
+        }
+    }
+
+    public Sprite GetSprite(string spriteName){
 		if (tileSprites.ContainsKey (spriteName)) {
 			return tileSprites [spriteName];
-		} else if (additionSprites.ContainsKey (spriteName)) {
-			return additionSprites [spriteName];
-		} else {
-			Debug.LogError ("Asking for an unexisting sprite: " + spriteName);
+		} else if (additionSprites.ContainsKey(spriteName))
+        {
+            return additionSprites[spriteName];
+        }
+        else if(itemSprites.ContainsKey(spriteName)) {
+            return itemSprites[spriteName];
+        } else 
+        {
+            Debug.LogError ("Asking for an unexisting sprite: " + spriteName);
 			return null;
 		}
 	}
@@ -152,9 +196,16 @@ public class TileSpriteController : MonoBehaviour {
 			tileSprites [s.name] = s;
 		}
 
-		sprites = Resources.LoadAll<Sprite> ("Textures/TileAdditions/");
-		foreach (Sprite s in sprites) {
-			additionSprites [s.name] = s;
-		}
-	}
+        sprites = Resources.LoadAll<Sprite>("Textures/TileAdditions/");
+        foreach (Sprite s in sprites)
+        {
+            additionSprites[s.name] = s;
+        }
+
+        sprites = Resources.LoadAll<Sprite>("Textures/Items/");
+        foreach (Sprite s in sprites)
+        {
+            additionSprites[s.name] = s;
+        }
+    }
 }

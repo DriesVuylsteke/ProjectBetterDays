@@ -225,7 +225,7 @@
     <Room X="50" Y="50" Temperature="0" Oxygen="0" />
   </Rooms>
   <Characters>
-    <Character Speed="1" Construction="1" Planting="1" Harvesting="1" X="49" Y="51" />
+    <Character Speed="1" Construction="1" Planting="1" Harvesting="1" X="50" Y="50" />
   </Characters>
   <JobQueue>
     <ConstructionJobs />

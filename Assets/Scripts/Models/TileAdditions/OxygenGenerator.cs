@@ -27,7 +27,7 @@ public class OxygenGenerator : TileAddition {
 
 	public override bool Conditions(){
 		return this.tile.TileType == TileType.Floor && // A generator requires a floor
-			this.tile.addition == null && // A generator can not be placed on another addition
+			this.tile.Addition == null && // A generator can not be placed on another addition
 			tile.Room != null; // a generator needs a room to provide oxygen to
 	}
 
@@ -44,7 +44,13 @@ public class OxygenGenerator : TileAddition {
 		tile.Room.AddOxygen (deltaTime * OxygenPerSecond, MaxOxygen);
 	}
 
-	protected override void WriteAdditionalXmlProperties (System.Xml.XmlWriter writer)
+    public override bool CanContainItemOnTile(ItemStack stack)
+    {
+        return false;
+    }
+
+    #region Serialization
+    protected override void WriteAdditionalXmlProperties (System.Xml.XmlWriter writer)
 	{
 		base.WriteAdditionalXmlProperties (writer);
 
@@ -59,4 +65,6 @@ public class OxygenGenerator : TileAddition {
 		OxygenPerSecond = float.Parse (reader.GetAttribute ("OxygenPerSecond"));
 		MaxOxygen = float.Parse (reader.GetAttribute ("MaxOxygen"));
 	}
+#endregion
+
 }

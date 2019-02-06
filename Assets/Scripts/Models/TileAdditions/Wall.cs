@@ -22,7 +22,7 @@ public class Wall : TileAddition
 
 	public override bool Conditions(){
 		return this.tile.TileType == TileType.Floor &&
-			this.tile.addition == null;
+			this.tile.Addition == null;
 	}
 
 	public override TileAddition Clone(Tile t){
@@ -33,5 +33,11 @@ public class Wall : TileAddition
 	public override bool DefinesRoomBorder(){
 		return BuildPercentage == 1;
 	}
+
+    public override bool CanContainItemOnTile(ItemStack stack)
+    {
+        // You can not put an item on top of a wall
+        return false;
+    }
 }
 

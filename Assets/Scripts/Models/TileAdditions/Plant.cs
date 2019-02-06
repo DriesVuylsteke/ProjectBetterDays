@@ -26,6 +26,7 @@ public abstract class Plant : TileAddition
     {
         movementCost = 0.5f;
         constructionCost = 1;
+        harvestAmount = 0f;
         //progressSpeed = 0.016f;
         //progressSpeed = 0.08f;
     }
@@ -33,9 +34,9 @@ public abstract class Plant : TileAddition
     public override bool Conditions()
     {
         return this.tile.TileType == TileType.Floor &&
-            this.tile.addition != null &&
-            this.tile.addition is Soil &&
-            this.tile.addition.BuildPercentage == 1;
+            this.tile.Addition != null &&
+            this.tile.Addition is Soil &&
+            this.tile.Addition.BuildPercentage == 1;
     }
 
     protected int GetProgressState()
@@ -100,4 +101,28 @@ public abstract class Plant : TileAddition
     // Job is the harvest job that assigned this plant to be harvested
     protected abstract void PlantHarvested(Job job);
     protected abstract void HarvestCancelled(Job job);
+
+    /// <summary>
+    /// Resets the plant values, also offers a new job to plant this plant again
+    /// </summary>
+    protected virtual void ResetPlantValues()
+    {
+        BuildPercentage = 0;
+        Progress = 0;
+        SetupPlant();
+        queuedForHarvest = false;
+
+        // Notify everybody that values have changed
+        // Do this by performing work (no actual work)
+        DoWork(0);
+
+        PlantJob job = new PlantJob(this);
+        tile.world.Jobs.OfferPlantJob(job);
+    }
+
+    public override bool CanContainItemOnTile(ItemStack stack)
+    {
+        // You can put an item on top of a plant
+        return true;
+    }
 }

@@ -145,7 +145,7 @@ public class Room{
 
 		if (added) {
 			// Also add the addition that is on the tile
-			TileAdditionChanged(tile, null, tile.addition);
+			TileAdditionChanged(tile, null, tile.Addition);
 			tile.OnTileTypeChanged += TileChanged;
 			tile.OnRoomChanged += UnregisterTile;
 			tile.OnTileAdditionChanged += TileAdditionChanged;

@@ -34,6 +34,12 @@ public class Soil : TileAddition
     public override bool Conditions()
     {
         return this.tile.TileType == TileType.Floor &&
-            this.tile.addition == null;
+            this.tile.Addition == null;
+    }
+
+    public override bool CanContainItemOnTile(ItemStack stack)
+    {
+        // You can put an item on top of soil
+        return true;
     }
 }

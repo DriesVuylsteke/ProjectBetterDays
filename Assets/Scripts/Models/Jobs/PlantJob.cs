@@ -48,7 +48,7 @@ public class PlantJob : Job
     {
         base.ReadAdditionalXmlProperties(reader);
 
-        Addition = this.DestinationTile.addition;
+        Addition = this.DestinationTile.Addition;
     }
 
     public override Skills GetJobType()

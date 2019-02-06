@@ -42,7 +42,7 @@ public abstract class TileAddition
 	// 1f = 1 second
 	// 1/2 f = 2 seconds
 	[SerializeField]
-	protected float progressSpeed = 1f;
+	protected float progressSpeed;
 
 	public float BuildPercentage { get; protected set;}
 	[SerializeField]
@@ -57,6 +57,7 @@ public abstract class TileAddition
 	/// Used for deserialization purpose
 	/// </summary>
 	public TileAddition(){
+        progressSpeed = 1f;
 		BuildPercentage = 0;
 	}
 
@@ -94,6 +95,7 @@ public abstract class TileAddition
 	// The tile should call this when it installs a piece of tile addition
 	public abstract bool Conditions();
 	public abstract TileAddition Clone(Tile t);
+
 	public virtual bool DefinesRoomBorder(){
 		return false;
 	}
@@ -123,13 +125,30 @@ public abstract class TileAddition
         }
     }
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// 
-	/// 										SERIALIZATION
-	/// 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Returns true if the parent tile should be able to contain an item on the floor. For example, a wall should not be able to have an itemstack on top
+    /// </summary>
+    /// <param name="stack">The stack you want to put on top of the tile containing this addition</param>
+    /// <returns></returns>
+    public abstract bool CanContainItemOnTile(ItemStack stack);
 
-	public void WriteXml (XmlWriter writer) {
+
+    /// <summary>
+    /// Adds the ItemStack to the tile addition if possible, by default it just returns the stack because by default TileAdditions can't contain items
+    /// An Addition that can contain itemstacks has to override this method
+    /// </summary>
+    /// <param name="stack">the stack to add</param>
+    /// <returns>The itemstack that remains after adding it to this tile addition</returns>
+    public virtual ItemStack AddItemStackToTileAddition(ItemStack stack) { return stack; }
+
+        #region Serialization
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// 
+        /// 										SERIALIZATION
+        /// 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void WriteXml (XmlWriter writer) {
 		writer.WriteStartElement ("Addition");
 
 		writer.WriteAttributeString ("TypePath", this.GetType().FullName);
@@ -175,5 +194,6 @@ public abstract class TileAddition
 	protected virtual void ReadAdditionalXmlProperties(XmlReader reader){
 
 	}
+    #endregion
 }
 

@@ -119,7 +119,7 @@ public class Door : TileAddition
 		Tile south = tile.world.GetTileAt (tile.X, tile.Y - 1);
 		Tile west = tile.world.GetTileAt (tile.X - 1, tile.Y);
 
-		return tile != null && tile.addition != null && this.tile.addition.Name == Wall.AdditionName &&
+		return tile != null && tile.Addition != null && this.tile.Addition.Name == Wall.AdditionName &&
 		(north != null && south != null && north.Room != south.Room && north.Room != null && south.Room != null) ||
 		(east != null && west != null && east.Room != west.Room && east.Room != null && west.Room != null);
 	}
@@ -154,7 +154,15 @@ public class Door : TileAddition
 		return Name;
 	}
 
-	protected override void WriteAdditionalXmlProperties (System.Xml.XmlWriter writer)
+    public override bool CanContainItemOnTile(ItemStack stack)
+    {
+        // A door can never contain an item
+        // A possibility for later could be to only allow it to have an item while it is open, and than have that item blocking the door
+        return false;
+    }
+
+    #region Serialization
+    protected override void WriteAdditionalXmlProperties (System.Xml.XmlWriter writer)
 	{
 		base.WriteAdditionalXmlProperties (writer);
 
@@ -187,5 +195,6 @@ public class Door : TileAddition
         y = int.Parse(reader.GetAttribute("Tile2Y"));
         tile2 = tile.world.GetTileAt(x, y);
     }
+#endregion
 }
 
