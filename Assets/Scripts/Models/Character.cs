@@ -12,8 +12,10 @@ using System.Xml;
 /// </summary>
 public class Character {
 
-	//TODO: make this return a float based on the progress towards the destination tile
-	public float X { 
+    #region properties
+
+    #region Coordinates
+    public float X { 
 		get{
 			return CurrTile.X + (NextTile.X - CurrTile.X) * ProgressToNextTile;
 		}
@@ -23,11 +25,10 @@ public class Character {
 			return CurrTile.Y + (NextTile.Y - CurrTile.Y ) * ProgressToNextTile;
 		}
 	}
-
-
-    protected Dictionary<Skills, float> stats;
+    #endregion Coordinates
 
     #region Skills
+    protected Dictionary<Skills, float> stats;
     public float Speed
     {
         get
@@ -82,6 +83,17 @@ public class Character {
 	public bool Selected { get; protected set; }
     public World world;
 
+    #region Inventory
+    private ItemStack heldItemStack;
+
+    public ItemStack HeldItem
+    {
+        get { return heldItemStack; }
+        set { heldItemStack = value; }
+    }
+
+    #endregion Inventory
+
     #region Tiles
     protected Tile currTile;
 	public Tile CurrTile { 
@@ -135,6 +147,7 @@ public class Character {
                 currentJob.OnJobCancel -= OnJobCancel;
                 currentJob.OnJobComplete -= OnJobComplete;
                 currentJob.OnJobDelete -= OnJobDelete;
+                currentJob.OnJobDestinationUpdated -= OnJobDestinationChanged;
             }
             jobReached = false;
             currentJob = value;
@@ -143,6 +156,7 @@ public class Character {
                 currentJob.OnJobCancel += OnJobCancel;
                 currentJob.OnJobComplete += OnJobComplete;
                 currentJob.OnJobDelete += OnJobDelete;
+                currentJob.OnJobDestinationUpdated += OnJobDestinationChanged;
             }
         }
 	}
@@ -151,7 +165,9 @@ public class Character {
 
     protected AStar pathfinding;
 
-	public Character(Tile tile, World world, float speed = 1, float construction = 1, float planting = 1, float harvesting = 1)
+    #endregion properties
+
+    public Character(Tile tile, World world, float speed = 1, float construction = 1, float planting = 1, float harvesting = 1)
     {
         stats = new Dictionary<Skills, float>();
         stats.Add(Skills.Speed, speed);
@@ -174,11 +190,11 @@ public class Character {
     /// <returns>The player stats</returns>
     public Dictionary<Skills, float> GetPlayerStats() { return stats; }
 
-	/// <summary>
-	/// Attempts to select the character for actions
-	/// </summary>
-	/// <returns><c>true</c>, if character was selected, <c>false</c> otherwise.</returns>
-	public bool SelectCharacter(){
+    /// <summary>
+    /// Attempts to select the character for actions
+    /// </summary>
+    /// <returns><c>true</c>, if character was selected, <c>false</c> otherwise.</returns>
+    public bool SelectCharacter(){
 		this.Selected = true;
 		if (OnCharacterSelectedChanged != null)
 			OnCharacterSelectedChanged (this);
@@ -236,10 +252,9 @@ public class Character {
                 // This is also where we gain experience for the work done
                 Skills jobSkill = CurrentJob.GetJobType();
                 float skillLvl = stats[jobSkill];
-                // TODO: make something balanced here, for now one minute of work = 1 level, two minutes of work = level 3
-                float workAmount = deltaTime * skillLvl;
+                CurrentJob.DoWork(this, deltaTime);
+                // Xp gained is based on time spent working, so more work (due to higher level) doesn't equal more xp
                 float xpAmount = deltaTime / (skillLvl * 60);
-				CurrentJob.DoWork (workAmount);
                 stats[jobSkill] += xpAmount;
 			}
 
@@ -256,6 +271,9 @@ public class Character {
                 } if(j == null)
                 {
                     j = world.Jobs.RequestPlantJob();
+                } if(j == null)
+                {
+                    j = world.Jobs.RequestHaulJob();
                 }
                 OverrideJob(j);
 
@@ -284,7 +302,14 @@ public class Character {
         NextTile = CurrTile;
     }
 
-	void OnJobComplete(Job job){
+    #region JobEvents
+    void OnJobDestinationChanged(Job job)
+    {
+        DestTile = job.DestinationTile;
+        NextTile = CurrTile;
+    }
+
+    void OnJobComplete(Job job){
 		if (job == CurrentJob) {
             Debug.Log("Job completed");
             CurrentJob = null;
@@ -325,6 +350,8 @@ public class Character {
             Debug.LogError("A job that isn't our current job has told us it's being cancelled, did you forget to unregister?");
         }
     }
+
+    #endregion
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// 

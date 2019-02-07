@@ -17,7 +17,7 @@ class MovementJob : Job
         return new MovementJob(DestinationTile);
     }
 
-    public override void DoWork(float amount)
+    public override void DoWork(Character pawnDoingJob, float deltaTime)
     {
         JobComplete();
     }

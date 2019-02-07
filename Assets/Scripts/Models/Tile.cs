@@ -36,6 +36,21 @@ public class Tile {
     bool borderDefinition;
 
     private ItemStack itemStack;
+    private ItemStack ItemStack
+    {
+        get { return itemStack; }
+        set
+        {
+            if(value != itemStack)
+            {
+                itemStack = value;
+                if (OnItemStackTypeChanged != null)
+                {
+                    OnItemStackTypeChanged(this, itemStack);
+                }
+            }
+        }
+    }
 
     public World world;
 
@@ -103,7 +118,7 @@ public class Tile {
     {
         if(OnItemStackTypeChanged != null)
         {
-            OnItemStackTypeChanged(this, itemStack);
+            OnItemStackTypeChanged(this, ItemStack);
         }
     }
 
@@ -138,24 +153,50 @@ public class Tile {
 
         // If there is an itemstack, try to merge them, if the resulting itemstack (meaning some items weren't merged) is not null
         // The item stack wasn't fully added to this tile so return false
-        if(itemStack != null)
+        if(ItemStack != null)
         {
-            return itemStack.MergeStackInto(stack);
+            return ItemStack.MergeStackInto(stack);
         }
 
         // If we haven't returned at this point the tile contained no items and no tile addition
         // Any regular tile can contain an itemstack (for now, for example if we add in a water tile this might not be possible)
 
         // Assign the itemstack to this tile
-        itemStack = stack;
-        if(OnItemStackTypeChanged != null)
+        ItemStack = stack;
+        return ItemStack;
+    }
+
+    /// <summary>
+    /// Attempts to take the ItemStack on top of the tile
+    /// </summary>
+    /// <param name="stackToMergeTo">An existing ItemStack to merge to, if null a new ItemStack is created and returned. This param can be used to restrict what item is taken</param>
+    /// <returns>The ItemStack containing the taken items</returns>
+    /// 
+    // TODO: might need to add a filter to only take one (perhaps for meals later on etc)
+    public ItemStack TakeItemStackFromTile(ItemStack stackToMergeTo)
+    {
+        // There are items on this tile
+        if(this.ItemStack != null)
         {
-            OnItemStackTypeChanged(this, itemStack);
+            // The destination stack is empty so we can take all items
+            if(stackToMergeTo == null)
+            {
+                stackToMergeTo = ItemStack;
+                ItemStack = null;
+                return stackToMergeTo;
+            } else
+            {
+                ItemStack = stackToMergeTo.MergeStackInto(ItemStack);
+                return stackToMergeTo;
+            }
+        } else
+        {
+            return stackToMergeTo;
         }
-        return itemStack;
     }
 
     #endregion
+
 
     /// <summary>
     /// Changed the tiletype to floor when possible

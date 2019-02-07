@@ -25,9 +25,9 @@ public class HarvestJob : Job
         DeleteJob();
     }
 
-    public override void DoWork(float amount)
+    public override void DoWork(Character pawnDoingJob, float deltaTime)
     {
-        if (Addition.DoWork(amount) >= 1)
+        if (Addition.DoWork(CalculateWorkAmount(pawnDoingJob, deltaTime)) >= 1)
         {
             JobComplete();
         }

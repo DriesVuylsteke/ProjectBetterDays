@@ -8,10 +8,12 @@ public class JobQueue
 	Queue<ConstructionJob> constructionJobs;
     Queue<HarvestJob> harvestJobs;
     Queue<PlantJob> plantJobs;
+    Queue<HaulJob> haulingJobs;
 
     List<ConstructionJob> deletedConstructionJobs;
     List<HarvestJob> deletedHarvestJobs;
     List<PlantJob> deletedPlantJobs;
+    List<HaulJob> deletedHaulingJobs;
 
     World world;
 
@@ -20,10 +22,12 @@ public class JobQueue
 		constructionJobs = new Queue<ConstructionJob> ();
         harvestJobs = new Queue<HarvestJob>();
         plantJobs = new Queue<PlantJob>();
+        haulingJobs = new Queue<HaulJob>();
 
         deletedConstructionJobs = new List<ConstructionJob>();
         deletedHarvestJobs = new List<HarvestJob>();
         deletedPlantJobs = new List<PlantJob>();
+        deletedHaulingJobs = new List<HaulJob>();
         this.world = world;
 	}
 
@@ -39,7 +43,7 @@ public class JobQueue
             return;
         }
 
-        job.OnJobDelete += RemoveJob;
+        job.OnJobDelete += MarkJobDepricated;
 
         constructionJobs.Enqueue(job);
     }
@@ -51,6 +55,7 @@ public class JobQueue
             ConstructionJob cj = constructionJobs.Dequeue();
             if (deletedConstructionJobs.Contains(cj))
             {
+                deletedConstructionJobs.Remove(cj);
                 return RequestConstructionJob();
             } else
             {
@@ -72,7 +77,7 @@ public class JobQueue
             Debug.LogError("Trying to add a job to the harvest queue that already exists");
             return;
         }
-        job.OnJobDelete += RemoveJob;
+        job.OnJobDelete += MarkJobDepricated;
         harvestJobs.Enqueue(job);
     }
 
@@ -81,8 +86,9 @@ public class JobQueue
         if (harvestJobs.Count > 0)
         {
             HarvestJob hj = harvestJobs.Dequeue();
-            if (harvestJobs.Contains(hj))
+            if (deletedHarvestJobs.Contains(hj))
             {
+                deletedHarvestJobs.Remove(hj);
                 return RequestHarvestJob();
             }
             else
@@ -104,7 +110,7 @@ public class JobQueue
             Debug.LogError("Trying to add a job to the plant queue that already exists");
             return;
         }
-        job.OnJobDelete += RemoveJob;
+        job.OnJobDelete += MarkJobDepricated;
         plantJobs.Enqueue(job);
     }
 
@@ -115,11 +121,45 @@ public class JobQueue
             PlantJob pj = plantJobs.Dequeue();
             if (deletedPlantJobs.Contains(pj))
             {
+                deletedPlantJobs.Remove(pj);
                 return RequestPlantJob();
             }
             else
             {
                 return pj;
+            }
+        }
+        return null;
+    }
+
+    /**
+    * Haul jobs
+    */
+    public void OfferHaulJob(HaulJob job)
+    {
+        Debug.Log("Offering Haul job");
+        if (haulingJobs.Contains(job))
+        {
+            Debug.LogError("Trying to add a job to the Haul queue that already exists");
+            return;
+        }
+        job.OnJobDelete += MarkJobDepricated;
+        haulingJobs.Enqueue(job);
+    }
+
+    public HaulJob RequestHaulJob()
+    {
+        if (haulingJobs.Count > 0)
+        {
+            HaulJob hj = haulingJobs.Dequeue();
+            if (deletedHaulingJobs.Contains(hj))
+            {
+                deletedHaulingJobs.Remove(hj);
+                return RequestHaulJob();
+            }
+            else
+            {
+                return hj;
             }
         }
         return null;
@@ -147,6 +187,11 @@ public class JobQueue
             OfferPlantJob((PlantJob)job);
             return;
         }
+        else if (job is HaulJob)
+        {
+            OfferHaulJob((HaulJob)job);
+            return;
+        }
 
         if (job is MovementJob)
             return;
@@ -154,7 +199,7 @@ public class JobQueue
         Debug.LogError("Offering a job to the queue that we cannot put in any specific queue?");
     }
 
-    protected void RemoveJob(Job job)
+    protected void MarkJobDepricated(Job job)
     {
         if (job is ConstructionJob)
         {
@@ -167,6 +212,10 @@ public class JobQueue
         else if (job is PlantJob)
         {
             deletedPlantJobs.Add((PlantJob)job);
+        }
+        else if (job is HaulJob)
+        {
+            deletedHaulingJobs.Add((HaulJob)job);
         }
     }
 

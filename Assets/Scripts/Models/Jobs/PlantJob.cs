@@ -28,9 +28,9 @@ public class PlantJob : Job
         DeleteJob();
     }
 
-    public override void DoWork(float amount)
+    public override void DoWork(Character pawnDoingJob, float deltaTime)
     {
-        Addition.DoWork(amount);
+        Addition.DoWork(CalculateWorkAmount(pawnDoingJob, deltaTime));
     }
 
     protected override void OnJobCancelled(Job job)

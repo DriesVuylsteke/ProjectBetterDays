@@ -22,8 +22,9 @@ public class ConstructionJob : Job
         DeleteJob();
     }
 
-	public override void DoWork (float amount){
-		if (Addition.DoWork (amount) >= 1) {
+	public override void DoWork (Character pawnDoingJob, float deltaTime)
+    {
+		if (Addition.DoWork (this.CalculateWorkAmount(pawnDoingJob, deltaTime)) >= 1) {
 			JobComplete ();
 		}
 	}

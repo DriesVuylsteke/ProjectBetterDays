@@ -47,6 +47,9 @@ TagManager:
   - name: TileAdditions
     uniqueID: 2977520509
     locked: 0
+  - name: ItemStacks
+    uniqueID: 1371763057
+    locked: 0
   - name: Characters
     uniqueID: 3601345191
     locked: 0

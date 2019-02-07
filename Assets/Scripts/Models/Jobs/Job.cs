@@ -9,11 +9,30 @@ public abstract class Job {
 	public event Action<Job> OnJobComplete;
     public event Action<Job> OnJobCancel;
     public event Action<Job> OnJobDelete;
+    public event Action<Job> OnJobDestinationUpdated;
 
     public bool StandOnDestination { get; protected set; }
 
-	// The tile that the current activity of the job takes place at
-	public Tile DestinationTile { get; protected set;}
+    // The tile that the current activity of the job takes place at
+    private Tile destinationTile;
+	public Tile DestinationTile
+    {
+        get
+        {
+            return destinationTile;
+        }
+        set
+        {
+            if(value != destinationTile)
+            {
+                destinationTile = value;
+                if (OnJobDestinationUpdated != null)
+                {
+                    OnJobDestinationUpdated(this);
+                }
+            }
+        }
+    }
 
 	public Job(){
 		StandOnDestination = false;
@@ -21,14 +40,31 @@ public abstract class Job {
         OnJobCancel += OnJobCancelled;
 	}
 
-	public abstract void DoWork (float amount);
+    /// <summary>
+    /// Perform work on this job
+    /// </summary>
+    /// <param name="pawnDoingJob">The pawn performing the job</param>
+    /// <param name="deltaTime">The amount of time worked on this job</param>
+	public abstract void DoWork (Character pawnDoingJob, float deltaTime);
+
+    /// <summary>
+    /// Calculates the amount of work a character can do on this job
+    /// </summary>
+    /// <param name="character">The character doing the work</param>
+    /// <param name="deltaTime">The amount of time worked on this job</param>
+    /// <returns>The amount of work performed in one action</returns>
+    protected float CalculateWorkAmount(Character character, float deltaTime)
+    {
+        // For now something very basic, might need to change this later
+        return deltaTime * character.GetPlayerStats()[this.GetJobType()];
+    }
 
     public abstract Job Clone();
 
 	/// <summary>
 	/// Called when the job is complete, probably from a subclass
 	/// </summary>
-	protected void JobComplete(){
+	protected virtual void JobComplete(){
 		if (OnJobComplete != null) {
 			OnJobComplete (this);
 		}
@@ -42,7 +78,7 @@ public abstract class Job {
     /// An outside source tells the job it should be cancelled
     /// For example, this could be because the job isn't reachable anymore.
     /// </summary>
-    public void CancelJob()
+    public virtual void CancelJob()
     {
         if (OnJobCancel != null)
             OnJobCancel(this);
