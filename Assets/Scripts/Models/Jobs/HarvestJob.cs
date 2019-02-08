@@ -19,6 +19,10 @@ public class HarvestJob : Job
         }
     }
 
+    /// <summary>
+    /// ONLY USE THIS FOR DESERIALIZATION, THIS JOB WILL NOT HAVE SUFFICIENT DATA TO WORK WITHOUT READING ADDITIONAL INFORMATION FROM THE XML FILE
+    /// </summary>
+    public HarvestJob() : base() { }
 
     protected void TileAdditionRemoved(TileAddition addition)
     {
@@ -55,9 +59,16 @@ public class HarvestJob : Job
         return Skills.Harvesting;
     }
 
-    public override Job Clone()
+    public override void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false)
     {
-        return new HarvestJob(Addition);
+        if (firstItem)
+        {
+            theQueue.EnqueueJobAndResetQueue(this);
+        }
+        else
+        {
+            theQueue.EnqueueJob(this);
+        }
     }
 }
 

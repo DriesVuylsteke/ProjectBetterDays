@@ -16,6 +16,11 @@ public class HaulJob : Job
         StandOnDestination = true;
     }
 
+    /// <summary>
+    /// ONLY USE THIS FOR DESERIALIZATION, THIS JOB WILL NOT HAVE SUFFICIENT DATA TO WORK WITHOUT READING ADDITIONAL INFORMATION FROM THE XML FILE
+    /// </summary>
+    public HaulJob() : base() { }
+
     public override void DoWork(Character pawnDoingJob, float deltaTime)
     {
         // Pick up the stack once
@@ -41,7 +46,7 @@ public class HaulJob : Job
             // We'll create the new job on our own because the pickup tile will have changed
             HaulJob updated = new HaulJob(pawnThatPickedUpItem.CurrTile, dropoff);
             pawnThatPickedUpItem.HeldItem = pawnThatPickedUpItem.CurrTile.AddItemStackToTile(pawnThatPickedUpItem.HeldItem);
-            DestinationTile.world.Jobs.OfferHaulJob(updated);
+            DestinationTile.world.Jobs.EnqueueJob(updated);
             job.DeleteJob();
         } else
         {
@@ -55,10 +60,15 @@ public class HaulJob : Job
         return Skills.Speed;
     }
 
-    public override Job Clone()
+    public override void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false)
     {
-        HaulJob cloned = new HaulJob(DestinationTile, dropoff);
-        cloned.pawnThatPickedUpItem = this.pawnThatPickedUpItem;
-        return cloned;
+        if (firstItem)
+        {
+            theQueue.EnqueueJobAndResetQueue(this);
+        }
+        else
+        {
+            theQueue.EnqueueJob(this);
+        }
     }
 }

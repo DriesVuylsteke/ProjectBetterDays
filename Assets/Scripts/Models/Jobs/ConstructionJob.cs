@@ -17,6 +17,11 @@ public class ConstructionJob : Job
         }
 	}
 
+    /// <summary>
+    /// ONLY USE THIS FOR DESERIALIZATION, THIS JOB WILL NOT HAVE SUFFICIENT DATA TO WORK WITHOUT READING ADDITIONAL INFORMATION FROM THE XML FILE
+    /// </summary>
+    public ConstructionJob() : base() { }
+
     protected void TileAdditionRemoved(TileAddition addition)
     {
         DeleteJob();
@@ -52,9 +57,16 @@ public class ConstructionJob : Job
         return Skills.Construction;
     }
 
-    public override Job Clone()
+    public override void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false)
     {
-        return new ConstructionJob(Addition);
+        if (firstItem)
+        {
+            theQueue.EnqueueJobAndResetQueue(this);
+        }
+        else
+        {
+            theQueue.EnqueueJob(this);
+        }
     }
 }
 

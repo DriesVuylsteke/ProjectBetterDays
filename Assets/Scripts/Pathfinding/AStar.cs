@@ -55,7 +55,7 @@ public class AStar {
 				// We have reached our goal, lets convert this to an actual sequence of tiles to walk on
 				// then end this constructor function
 				ReconstructPath(came_from, current);
-				Debug.Log ("Found path of length: " + this.Length ());
+				//Debug.Log ("Found path of length: " + this.Length ());
 				return;
 			}
 

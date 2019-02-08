@@ -41,6 +41,15 @@ public abstract class Job {
 	}
 
     /// <summary>
+    /// Gives the full className. This is used for serialization
+    /// </summary>
+    /// <returns>The full class name</returns>
+    protected string GetClassFullName()
+    {
+        return this.GetType().FullName;
+    }
+
+    /// <summary>
     /// Perform work on this job
     /// </summary>
     /// <param name="pawnDoingJob">The pawn performing the job</param>
@@ -58,8 +67,6 @@ public abstract class Job {
         // For now something very basic, might need to change this later
         return deltaTime * character.GetPlayerStats()[this.GetJobType()];
     }
-
-    public abstract Job Clone();
 
 	/// <summary>
 	/// Called when the job is complete, probably from a subclass
@@ -109,21 +116,35 @@ public abstract class Job {
 	public void WriteXml (XmlWriter writer) {
 		writer.WriteStartElement ("Job");
 
-        writer.WriteAttributeString("X", DestinationTile.X.ToString());
-        writer.WriteAttributeString("Y", DestinationTile.Y.ToString());
+        writer.WriteAttributeString("Class", GetClassFullName());
+
+        writer.WriteAttributeString("DestinationX", DestinationTile.X.ToString());
+        writer.WriteAttributeString("DestinationY", DestinationTile.Y.ToString());
 
         WriteAdditionalXmlProperties(writer);
 
         writer.WriteEndElement ();
 	}
 
-	public void ReadXml(XmlReader reader, World world){
-        int X = int.Parse(reader.GetAttribute("X"));
-        int Y = int.Parse(reader.GetAttribute("Y"));
+    // Not sure how else to do this, lots of duplicate code but I want to force the compiler to see at runtime what exact subtype is calling the method
+    // For some reason the compiler is stupid and doesn't call Enqueue with the correct type if we do it from here (even if it's a subtype!) so we have to implement this method
+    // in every single subclass which is a lot of duplicate code but oh well
+    /// <summary>
+    /// Enqueues the item from the subclass, this ensures that the program knows at runtime what the specific type of the job is and doesn't just enqueue the job as a "Job"
+    /// </summary>
+    /// <param name="theQueue">The queue to enqueue the job in</param>
+    /// <param name="firstItem">Whether or not this is the first item getting enqueued after deserialisation</param>
+    public abstract void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false);
+
+	public void ReadXml(XmlReader reader, World world, JobQueue theQueue, bool firstItem = false){
+        int X = int.Parse(reader.GetAttribute("DestinationX"));
+        int Y = int.Parse(reader.GetAttribute("DestinationY"));
 
         DestinationTile = world.GetTileAt(X,Y);
 
         ReadAdditionalXmlProperties(reader);
+
+        EnqueueFromSubclass(theQueue, firstItem);
 	}
 
 	protected virtual void WriteAdditionalXmlProperties(XmlWriter writer){

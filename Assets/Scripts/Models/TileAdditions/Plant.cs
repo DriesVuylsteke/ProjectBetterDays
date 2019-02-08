@@ -65,7 +65,6 @@ public abstract class Plant : TileAddition
         Progress += deltaTime * this.progressSpeed;
         if(curStage != GetProgressState())
         {
-            Debug.Log("Work done! The plant has grown");
             DoWork(0);
         }
     }
@@ -84,9 +83,9 @@ public abstract class Plant : TileAddition
 
             // TODO: this should probably go somewhere useful
             HaulJob haul = new HaulJob(tile, tile.world.GetTileAt(tile.X, tile.Y - 2));
-            tile.world.Jobs.OfferHaulJob(haul);
+            tile.world.Jobs.EnqueueJob(haul);
         };
-        tile.world.Jobs.OfferHarvestJob(harvestJob);
+        tile.world.Jobs.EnqueueJob(harvestJob);
     }
 
     // Work in the case of a plant is harvesting it if it is fully grown
@@ -121,7 +120,7 @@ public abstract class Plant : TileAddition
         DoWork(0);
 
         PlantJob job = new PlantJob(this);
-        tile.world.Jobs.OfferPlantJob(job);
+        tile.world.Jobs.EnqueueJob(job);
     }
 
     public override bool CanContainItemOnTile(ItemStack stack)

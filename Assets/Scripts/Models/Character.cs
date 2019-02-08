@@ -135,6 +135,9 @@ public class Character {
     #endregion
 
     #region Job
+    protected List<String> allJobs;
+    public List<string> jobPriorities; // TODO: make a getter for this that makes a deep copy and returns that, this seems unsafe to pass the actual list
+
     protected Job currentJob;
 	protected Job CurrentJob {
 		get {
@@ -181,6 +184,18 @@ public class Character {
 		CurrTile = tile;
 		NextTile = tile;
 		DestTile = tile;
+
+        // Register to update your list of possible jobs
+        world.Jobs.JobQueueAdded += Jobs_JobQueueAdded;
+        allJobs = world.Jobs.GetActiveQueues();
+        jobPriorities = new List<string>();
+        foreach(string jobName in allJobs)
+        {
+            if (!jobPriorities.Contains(jobName))
+            {
+                jobPriorities.Add(jobName);
+            }
+        }
 	}
 
     // TODO: should probably not give a hard copy here
@@ -189,6 +204,8 @@ public class Character {
     /// </summary>
     /// <returns>The player stats</returns>
     public Dictionary<Skills, float> GetPlayerStats() { return stats; }
+
+    #region characterSelection
 
     /// <summary>
     /// Attempts to select the character for actions
@@ -207,7 +224,9 @@ public class Character {
 			OnCharacterSelectedChanged (this);
 	}
 
-	public void Update(float deltaTime){
+    #endregion characterSelection
+
+    public void Update(float deltaTime){
 		// TODO: pathfinding
 
 		// If we have a next tile, move to it
@@ -264,17 +283,7 @@ public class Character {
                 // TODO: subclass this so different characters can request different jobs
                 // TODO: this gets spammed if there are no jobs, perhaps make the character idle for a couple seconds? Could also be a job!
                 // TODO: move this request into the job queue, should probably pass your own preferences of jobs in that function too
-                Job j = world.Jobs.RequestConstructionJob();
-                if(j == null)
-                {
-                    j = world.Jobs.RequestHarvestJob();
-                } if(j == null)
-                {
-                    j = world.Jobs.RequestPlantJob();
-                } if(j == null)
-                {
-                    j = world.Jobs.RequestHaulJob();
-                }
+                Job j = world.Jobs.RequestJob(jobPriorities);
                 OverrideJob(j);
 
 				if (CurrentJob == null) {
@@ -294,12 +303,74 @@ public class Character {
         if (CurrentJob != null)
         {
             Debug.Log("Requeueing job: " + CurrentJob.GetHashCode());
-            world.Jobs.RequeueJob(CurrentJob);
+            // TODO: this is ugly?
+            CurrentJob.EnqueueFromSubclass(world.Jobs);
         }
 
         CurrentJob = job;
         DestTile = currentJob.DestinationTile;
         NextTile = CurrTile;
+    }
+
+    private void Jobs_JobQueueAdded(JobQueue theQueue, string queueDescription)
+    {
+        if (allJobs.Contains(queueDescription))
+        {
+            Debug.LogError("The jobqueue tells us about a new job that we already know about?");
+        } else
+        {
+            allJobs.Add(queueDescription);
+            jobPriorities.Add(queueDescription); // Add the new job as the lowest priority
+            Debug.Log("Added job priority: " + queueDescription);
+            // Also add the job to the priority list with the lowest priority
+        }
+    }
+
+    /// <summary>
+    /// Assigns a priority to a certain type of jobQueue
+    /// </summary>
+    /// <param name="jobIdentifier">An identifier present in allJobs</param>
+    /// <param name="priority">A priority for the job, should be a value between 0 and allJobs.Size with 0 being the highest priority </param>
+    public void SetJobPriority(string jobIdentifier, int priority)
+    {
+        if(priority < 0 || priority >= jobPriorities.Count)
+        {
+            Debug.LogError("Not a valid priority, max priority: " + (jobPriorities.Count-1) + " Given priority: " + priority);
+            return;
+        }
+        if (!jobPriorities.Contains(jobIdentifier))
+        {
+            Debug.LogError("Not a valid jobIdentifier: " + jobIdentifier);
+            return;
+        }
+
+        if(jobPriorities.IndexOf(jobIdentifier) == priority)
+        {
+            // Already in the right spot, just return
+            return;
+        }
+
+        Debug.Log("Changing a job priority: " + jobIdentifier + " to " + priority);
+
+        jobPriorities.Remove(jobIdentifier);
+        List<string> resortedJobs = new List<string>();
+
+        for(int i = 0; i < jobPriorities.Count; i++)
+        {
+            if(i == priority)
+            {
+                resortedJobs.Add(jobIdentifier);
+            }
+            resortedJobs.Add(jobPriorities[i]);
+        }
+        // only occurs when we move to the end of the queue
+        if(priority == resortedJobs.Count)
+        {
+            resortedJobs.Add(jobIdentifier);
+        }
+
+        jobPriorities = resortedJobs;
+        Debug.Log("Changing a job priority: " + jobPriorities.Count);
     }
 
     #region JobEvents
@@ -375,7 +446,7 @@ public class Character {
 
         if (CurrentJob != null)
         {
-            world.Jobs.RequeueJob(CurrentJob);
+            world.Jobs.EnqueueJob(CurrentJob);
         }
 
 

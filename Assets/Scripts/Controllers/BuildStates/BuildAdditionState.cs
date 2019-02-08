@@ -55,13 +55,13 @@ public class BuildAdditionState : BuildState
                 switch (requiredSkill)
                 {
                     case Skills.Construction:
-                        world.Jobs.OfferConstructionJob(new ConstructionJob(addition));
+                        world.Jobs.EnqueueJob(new ConstructionJob(addition));
                         break;
                     case Skills.Planting:
-                        world.Jobs.OfferPlantJob(new PlantJob(addition));
+                        world.Jobs.EnqueueJob(new PlantJob(addition));
                         break;
                     case Skills.Harvesting:
-                        world.Jobs.OfferHarvestJob(new HarvestJob(addition));
+                        world.Jobs.EnqueueJob(new HarvestJob(addition));
                         break;
                     default:
                         Debug.LogError("Don't know how to create a job for this skill");

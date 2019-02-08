@@ -29,7 +29,7 @@ public class CharacterSpriteController : MonoBehaviour {
         if (world.GetCharacters().Count == 0)
         {
             CreateCharacter(50, 50);
-            //CreateCharacter(52, 50);
+            CreateCharacter(52, 50);
         }
         else
         {
@@ -74,7 +74,7 @@ public class CharacterSpriteController : MonoBehaviour {
 		GameObject char_go = CharacterGOMap [character];
 		SpriteRenderer sr = char_go.GetComponent<SpriteRenderer> ();
 
-        Debug.Log("Character selection changed");
+        //Debug.Log("Character selection changed");
 		sr.color = character.Selected ? highlightColor : Color.white;
 	}
 

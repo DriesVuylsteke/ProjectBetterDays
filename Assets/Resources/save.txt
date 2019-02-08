@@ -41,16 +41,14 @@
     <Tile X="46" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="46" Y="48" DefinesRoomBorder="False" TileType="1" />
     <Tile X="46" Y="49" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="46" Y="50" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="46" Y="50" DefinesRoomBorder="True" TileType="1">
+      <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
+    </Tile>
     <Tile X="46" Y="51" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="46" Y="52" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
-    <Tile X="46" Y="53" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
+    <Tile X="46" Y="52" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="46" Y="53" DefinesRoomBorder="False" TileType="1" />
     <Tile X="46" Y="54" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+      <Addition TypePath="Tomato" Name="Tomato" Orientation="0" RenderString="" MovementCost="0.5" BuildPercentage="0" Progress="0" />
     </Tile>
     <Tile X="46" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
@@ -64,12 +62,8 @@
     <Tile X="47" Y="49" DefinesRoomBorder="False" TileType="1" />
     <Tile X="47" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="47" Y="51" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="47" Y="52" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
-    <Tile X="47" Y="53" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
+    <Tile X="47" Y="52" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="47" Y="53" DefinesRoomBorder="False" TileType="1" />
     <Tile X="47" Y="54" DefinesRoomBorder="False" TileType="1">
       <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
     </Tile>
@@ -85,12 +79,8 @@
     <Tile X="48" Y="49" DefinesRoomBorder="False" TileType="1" />
     <Tile X="48" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="48" Y="51" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="48" Y="52" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
-    <Tile X="48" Y="53" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
-    </Tile>
+    <Tile X="48" Y="52" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="48" Y="53" DefinesRoomBorder="False" TileType="1" />
     <Tile X="48" Y="54" DefinesRoomBorder="False" TileType="1">
       <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
     </Tile>
@@ -103,12 +93,16 @@
     <Tile X="49" Y="46" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="48" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="49" Y="49" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="49" Y="49" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="49" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="49" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="49" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="49" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -123,7 +117,9 @@
     <Tile X="50" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="50" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="50" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="50" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -133,12 +129,16 @@
     <Tile X="51" Y="46" DefinesRoomBorder="False" TileType="1" />
     <Tile X="51" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="51" Y="48" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="51" Y="49" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="51" Y="49" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="51" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="51" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="51" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="51" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="51" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="51" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="51" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -153,7 +153,9 @@
     <Tile X="52" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="52" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="52" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="52" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -168,7 +170,9 @@
     <Tile X="53" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="53" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="53" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="53" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="53" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="53" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -179,11 +183,15 @@
     <Tile X="54" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="54" Y="48" DefinesRoomBorder="False" TileType="1" />
     <Tile X="54" Y="49" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="54" Y="50" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="54" Y="50" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="54" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="54" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="54" Y="53" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="54" Y="54" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="54" Y="54" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="0" Progress="0" />
+    </Tile>
     <Tile X="54" Y="55" DefinesRoomBorder="True" TileType="1">
       <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
     </Tile>
@@ -222,24 +230,23 @@
     </Tile>
   </Tiles>
   <Rooms>
-    <Room X="50" Y="50" Temperature="0" Oxygen="0" />
+    <Room X="46" Y="51" Temperature="0" Oxygen="0" />
   </Rooms>
   <Characters>
-    <Character Speed="1" Construction="1" Planting="1" Harvesting="1" X="50" Y="50" />
+    <Character Speed="1" Construction="1.03235" Planting="1.01645" Harvesting="1" X="48" Y="51" />
   </Characters>
   <JobQueue>
-    <ConstructionJobs />
-    <HarvestJobs />
-    <PlantJobs>
-      <Job X="46" Y="53" />
-      <Job X="46" Y="54" />
-      <Job X="47" Y="52" />
-      <Job X="47" Y="53" />
-      <Job X="47" Y="54" />
-      <Job X="48" Y="52" />
-      <Job X="48" Y="53" />
-      <Job X="48" Y="54" />
-      <Job X="46" Y="52" />
-    </PlantJobs>
+    <Job Class="PlantJob" DestinationX="47" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="48" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="49" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="50" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="51" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="52" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="53" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="54" DestinationY="54" />
+    <Job Class="PlantJob" DestinationX="46" DestinationY="54" />
+    <Job Class="ConstructionJob" DestinationX="49" DestinationY="49" />
+    <Job Class="ConstructionJob" DestinationX="51" DestinationY="49" />
+    <Job Class="ConstructionJob" DestinationX="54" DestinationY="50" />
   </JobQueue>
 </World>

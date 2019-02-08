@@ -17,6 +17,11 @@ public class PlantJob : Job
         }
     }
 
+    /// <summary>
+    /// ONLY USE THIS FOR DESERIALIZATION, THIS JOB WILL NOT HAVE SUFFICIENT DATA TO WORK WITHOUT READING ADDITIONAL INFORMATION FROM THE XML FILE
+    /// </summary>
+    public PlantJob() : base() { }
+
     private void Addition_TileAdditionBuilt(TileAddition obj)
     {
         JobComplete();
@@ -56,8 +61,15 @@ public class PlantJob : Job
         return Skills.Planting;
     }
 
-    public override Job Clone()
+    public override void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false)
     {
-        return new PlantJob(Addition);
+        if (firstItem)
+        {
+            theQueue.EnqueueJobAndResetQueue(this);
+        }
+        else
+        {
+            theQueue.EnqueueJob(this);
+        }
     }
 }
