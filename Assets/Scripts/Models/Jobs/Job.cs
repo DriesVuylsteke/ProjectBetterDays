@@ -99,6 +99,9 @@ public abstract class Job {
         }
     }
 
+    // A very short description of the job (eg: hauling wood, tilling soil, planting tomato)
+    public abstract string GetJobTitle();
+
     /// <summary>
     /// Gives the skill type of the job
     /// </summary>

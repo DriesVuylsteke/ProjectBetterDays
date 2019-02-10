@@ -72,4 +72,9 @@ public class PlantJob : Job
             theQueue.EnqueueJob(this);
         }
     }
+
+    public override string GetJobTitle()
+    {
+        return "Planting " + Addition.Name;
+    }
 }

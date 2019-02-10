@@ -132,6 +132,7 @@ public class Character {
     #region Events
     public event Action<Character> OnCharacterPositionChanged;
 	public event Action<Character> OnCharacterSelectedChanged;
+    public event Action<Character, Job> OnCharacterJobChanged; // Called when the character has a new job
     #endregion
 
     #region Job
@@ -160,6 +161,10 @@ public class Character {
                 currentJob.OnJobComplete += OnJobComplete;
                 currentJob.OnJobDelete += OnJobDelete;
                 currentJob.OnJobDestinationUpdated += OnJobDestinationChanged;
+            }
+            if(OnCharacterJobChanged != null)
+            {
+                OnCharacterJobChanged(this, currentJob);
             }
         }
 	}

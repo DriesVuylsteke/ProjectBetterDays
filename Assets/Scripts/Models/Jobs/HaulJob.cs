@@ -71,4 +71,9 @@ public class HaulJob : Job
             theQueue.EnqueueJob(this);
         }
     }
+
+    public override string GetJobTitle()
+    {
+        return "Hauling";
+    }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-class MovementJob : Job
+public class MovementJob : Job
 {
     public MovementJob(Tile tile)
     {
@@ -30,5 +30,10 @@ class MovementJob : Job
     public override void EnqueueFromSubclass(JobQueue theQueue, bool firstItem = false)
     {
         // No need to enqueue movement jobs
+    }
+
+    public override string GetJobTitle()
+    {
+        return "going somewhere!";
     }
 }

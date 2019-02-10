@@ -70,5 +70,10 @@ public class HarvestJob : Job
             theQueue.EnqueueJob(this);
         }
     }
+
+    public override string GetJobTitle()
+    {
+        return "Harvesting " + Addition.Name;
+    }
 }
 

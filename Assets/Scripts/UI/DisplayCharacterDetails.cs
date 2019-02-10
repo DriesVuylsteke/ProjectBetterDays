@@ -21,6 +21,9 @@ public class DisplayCharacterDetails : MonoBehaviour
     [Header("Stats tab")]
     #region stats
     [SerializeField]
+    protected Text currentJob;
+
+    [SerializeField]
     protected Text speed;
     [SerializeField]
     protected Text construction;
@@ -156,7 +159,16 @@ public class DisplayCharacterDetails : MonoBehaviour
     {
         Debug.Log("Character added");
         character.OnCharacterSelectedChanged += CharacterSelectionChanged;
+        character.OnCharacterJobChanged += Character_OnCharacterJobChanged;
         CharacterSelectionChanged(character);
+    }
+
+    private void Character_OnCharacterJobChanged(Character character, Job job)
+    {
+        if(curCharacter == character && job != null)
+        {
+            currentJob.text = job.GetJobTitle();
+        }
     }
 
     public void DeselectCharacter()

@@ -68,5 +68,10 @@ public class ConstructionJob : Job
             theQueue.EnqueueJob(this);
         }
     }
+
+    public override string GetJobTitle()
+    {
+        return "Constructing " + Addition.Name;
+    }
 }
 
