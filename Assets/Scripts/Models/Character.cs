@@ -135,7 +135,7 @@ public class Character {
     #endregion
 
     #region Job
-    protected List<String> allJobs;
+    protected HashSet<String> allJobs;
     public List<string> jobPriorities; // TODO: make a getter for this that makes a deep copy and returns that, this seems unsafe to pass the actual list
 
     protected Job currentJob;
@@ -187,10 +187,11 @@ public class Character {
 
         // Register to update your list of possible jobs
         world.Jobs.JobQueueAdded += Jobs_JobQueueAdded;
-        allJobs = world.Jobs.GetActiveQueues();
+        allJobs = new HashSet<string>();
         jobPriorities = new List<string>();
-        foreach(string jobName in allJobs)
+        foreach(string jobName in world.Jobs.GetActiveQueues())
         {
+            allJobs.Add(jobName);
             if (!jobPriorities.Contains(jobName))
             {
                 jobPriorities.Add(jobName);
@@ -353,23 +354,23 @@ public class Character {
         Debug.Log("Changing a job priority: " + jobIdentifier + " to " + priority);
 
         jobPriorities.Remove(jobIdentifier);
-        List<string> resortedJobs = new List<string>();
+        List<string> reSortedJobs = new List<string>();
 
         for(int i = 0; i < jobPriorities.Count; i++)
         {
             if(i == priority)
             {
-                resortedJobs.Add(jobIdentifier);
+                reSortedJobs.Add(jobIdentifier);
             }
-            resortedJobs.Add(jobPriorities[i]);
+            reSortedJobs.Add(jobPriorities[i]);
         }
         // only occurs when we move to the end of the queue
-        if(priority == resortedJobs.Count)
+        if(priority == reSortedJobs.Count)
         {
-            resortedJobs.Add(jobIdentifier);
+            reSortedJobs.Add(jobIdentifier);
         }
 
-        jobPriorities = resortedJobs;
+        jobPriorities = reSortedJobs;
         Debug.Log("Changing a job priority: " + jobPriorities.Count);
     }
 
@@ -382,7 +383,6 @@ public class Character {
 
     void OnJobComplete(Job job){
 		if (job == CurrentJob) {
-            Debug.Log("Job completed");
             CurrentJob = null;
 			DestTile = CurrTile;
 			jobReached = false;
@@ -434,11 +434,18 @@ public class Character {
 
 		writer.WriteStartElement ("Character");
 
-        // speed
-        writer.WriteAttributeString("Speed", Speed.ToString());
-        writer.WriteAttributeString("Construction", Construction.ToString());
-        writer.WriteAttributeString("Planting", Planting.ToString());
-        writer.WriteAttributeString("Harvesting", Harvesting.ToString());
+        foreach (Skills skill in (Skills[])Enum.GetValues(typeof(Skills)))
+        {
+            writer.WriteAttributeString("Skill" + (int)skill, stats[skill].ToString());
+        }
+
+        writer.WriteAttributeString("Priorities", jobPriorities.Count.ToString());
+        int i = 0;
+        foreach(string priority in jobPriorities)
+        {
+            writer.WriteAttributeString("Priority" + i, priority);
+            i++;
+        }
 
         // currtile -- x and y position
         writer.WriteAttributeString ("X", currTile.X.ToString());
@@ -446,7 +453,7 @@ public class Character {
 
         if (CurrentJob != null)
         {
-            world.Jobs.EnqueueJob(CurrentJob);
+            CurrentJob.EnqueueFromSubclass(world.Jobs);
         }
 
 
@@ -457,10 +464,19 @@ public class Character {
     /// Reads the caracter specific properties
     /// </summary>
 	public void ReadXml(XmlReader reader){
-        Speed = float.Parse(reader.GetAttribute("Speed"));
-        Construction = float.Parse(reader.GetAttribute("Construction"));
-        Planting = float.Parse(reader.GetAttribute("Planting"));
-        Harvesting = float.Parse(reader.GetAttribute("Harvesting"));
+        foreach (Skills skill in (Skills[])Enum.GetValues(typeof(Skills)))
+        {
+            stats[skill] = float.Parse(reader.GetAttribute("Skill"+(int)skill));
+        }
+
+        // First clear the priorities created from the existing jobs, no "new" jobs will have appeared since the game was saved
+        jobPriorities.Clear();
+        int prioritiesToRead = int.Parse(reader.GetAttribute("Priorities"));
+        for(int i = 0; i < prioritiesToRead; i++)
+        {
+            jobPriorities.Add(reader.GetAttribute("Priority" + i));
+        }
+
     }
     #endregion
 }

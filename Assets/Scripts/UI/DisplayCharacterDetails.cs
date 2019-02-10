@@ -75,14 +75,18 @@ public class DisplayCharacterDetails : MonoBehaviour
     private void Jobs_JobQueueAdded(JobQueue theQueue, string addedQueue)
     {
         Debug.Log("Job priority button created");
+        CreateJobButton(addedQueue);
+    }
+
+    private void CreateJobButton(string queueName)
+    {
         GameObject go = Instantiate(workButtonPrefab, workButtonsParent.transform);
         Text text = go.GetComponentInChildren<Text>();
-        text.text = addedQueue;
+        text.text = queueName;
 
         Button but = go.GetComponent<Button>();
-        but.onClick.AddListener(() => SwapPriorities(addedQueue));
-
-        prioritiesGODict.Add(addedQueue, go);
+        but.onClick.AddListener(() => SwapPriorities(queueName));
+        prioritiesGODict.Add(queueName, go);
     }
 
     string firstPriority = "";
@@ -113,6 +117,16 @@ public class DisplayCharacterDetails : MonoBehaviour
     private void OrganisePriorities()
     {
         List<string> jobPriorities = curCharacter.jobPriorities;
+        if (jobPriorities.Count != prioritiesGODict.Count)
+        {
+            for (int i = 0; i < jobPriorities.Count; i++)
+            {
+                if (!prioritiesGODict.ContainsKey(jobPriorities[i]))
+                {
+                    CreateJobButton(jobPriorities[i]);
+                }
+            }
+        }
         for (int i = 0; i < jobPriorities.Count; i++)
         {
             prioritiesGODict[jobPriorities[i]].transform.SetSiblingIndex(i);
