@@ -85,6 +85,8 @@ public class Tile {
 		}
 	}
 
+    public List<Job> jobs;
+
     #region events
     // Tells the listeners that the tile has changed its type
     public event Action<Tile, TileType, TileType> OnTileTypeChanged;
@@ -103,6 +105,7 @@ public class Tile {
 		this.world = world;
 
 		borderDefinition = DefinesRoomBorder ();
+        jobs = new List<Job>();
 	}
 
     #region ItemStacks
@@ -197,6 +200,21 @@ public class Tile {
 
     #endregion
 
+    public void AddJob(Job job)
+    {
+        jobs.Add(job);
+        job.OnJobDestinationUpdated += RemoveJob;
+        job.OnJobDelete += RemoveJob;
+        job.OnJobComplete += RemoveJob;
+    }
+
+    public void RemoveJob(Job job)
+    {
+        jobs.Remove(job);
+        job.OnJobDestinationUpdated -= RemoveJob;
+        job.OnJobDelete -= RemoveJob;
+        job.OnJobComplete -= RemoveJob;
+    }
 
     /// <summary>
     /// Changed the tiletype to floor when possible

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class DisplayCharacterDetails : MonoBehaviour
 {
-    protected Character currentCharacter;
     World world { get { return WorldController.instance.world; } }
+    private Character CurrentCharacter { set; get; }
 
     [SerializeField]
     protected ToggleActionGroups groups;
@@ -31,8 +31,6 @@ public class DisplayCharacterDetails : MonoBehaviour
     protected Text planting;
     [SerializeField]
     protected Text harvesting;
-
-    protected Character curCharacter;
     #endregion stats
 
     [Header("Work tab")]
@@ -101,13 +99,13 @@ public class DisplayCharacterDetails : MonoBehaviour
             firstPriority = jobPriorityChange;
         } else
         {
-            List<string> oldPriorities = curCharacter.jobPriorities;
+            List<string> oldPriorities = CurrentCharacter.jobPriorities;
             
             int firstIndex = oldPriorities.IndexOf(firstPriority);
             int secondIndex = oldPriorities.IndexOf(jobPriorityChange);
 
-            curCharacter.SetJobPriority(jobPriorityChange, firstIndex);
-            curCharacter.SetJobPriority(firstPriority, secondIndex);
+            CurrentCharacter.SetJobPriority(jobPriorityChange, firstIndex);
+            CurrentCharacter.SetJobPriority(firstPriority, secondIndex);
             firstPriority = "";
 
             OrganisePriorities(); // Update the visual representation
@@ -119,7 +117,7 @@ public class DisplayCharacterDetails : MonoBehaviour
     /// </summary>
     private void OrganisePriorities()
     {
-        List<string> jobPriorities = curCharacter.jobPriorities;
+        List<string> jobPriorities = CurrentCharacter.jobPriorities;
         if (jobPriorities.Count != prioritiesGODict.Count)
         {
             for (int i = 0; i < jobPriorities.Count; i++)
@@ -165,7 +163,7 @@ public class DisplayCharacterDetails : MonoBehaviour
 
     private void Character_OnCharacterJobChanged(Character character, Job job)
     {
-        if(curCharacter == character && job != null)
+        if(CurrentCharacter == character && job != null)
         {
             currentJob.text = job.GetJobTitle();
         }
@@ -173,9 +171,9 @@ public class DisplayCharacterDetails : MonoBehaviour
 
     public void DeselectCharacter()
     {
-        if(curCharacter != null)
+        if(CurrentCharacter != null)
         {
-            curCharacter.DeselectCharacter();
+            CurrentCharacter.DeselectCharacter();
             firstPriority = "";
         }
     }
@@ -191,7 +189,7 @@ public class DisplayCharacterDetails : MonoBehaviour
             construction.text = character.Construction.ToString();
             planting.text = character.Planting.ToString();
             harvesting.text = character.Harvesting.ToString();
-            curCharacter = character;
+            CurrentCharacter = character;
             OrganisePriorities();
         } else
         {

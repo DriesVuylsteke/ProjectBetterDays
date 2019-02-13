@@ -76,7 +76,7 @@ public abstract class Plant : TileAddition
     {
         // For now just let the world know that this plant should be harvested
         HarvestJob harvestJob = new HarvestJob(this);
-        harvestJob.OnJobCancel += (job) => { QueueHarvest(); };
+        harvestJob.OnJobDelete += (job) => { QueueHarvest(); };
         harvestJob.OnJobComplete += (job) =>
         {
             PlantHarvested(job);

@@ -38,9 +38,9 @@ public class PlantJob : Job
         Addition.DoWork(CalculateWorkAmount(pawnDoingJob, deltaTime));
     }
 
-    protected override void OnJobCancelled(Job job)
+    protected override void OnJobDeleted(Job job)
     {
-        base.OnJobCancelled(job);
+        base.OnJobDeleted(job);
         Addition.tile.RemoveTileAddition();
     }
 

@@ -38,7 +38,7 @@ public class HaulJob : Job
         }
     }
 
-    protected override void OnJobCancelled(Job job)
+    protected override void OnJobDeleted(Job job)
     {
         if (pawnThatPickedUpItem != null)
         {
@@ -51,7 +51,7 @@ public class HaulJob : Job
         } else
         {
             // We didn't reach the destination tile so just cancel it like always
-            base.OnJobCancelled(job);
+            base.OnJobDeleted(job);
         }
     }
 

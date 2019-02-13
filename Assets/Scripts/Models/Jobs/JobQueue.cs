@@ -178,6 +178,14 @@ public class JobQueue
                 JobQueueAdded(this, queue.GetDescription());
             }
         }
+
+        // The reason to do this here is because here we know the job is properly instantiated but hasn't been enqueued yet.
+        // If a job is directly assigned to a character we don't need it to pop up on the tile.
+
+        // Makes sure that the active tile is aware of it's currently active job. Unregistering is done by the tile itself.
+        job.GetActiveTile().AddJob(job);
+        // If the active tile is updated, the new tile should be informed
+        job.OnJobDestinationUpdated += (j) => { j.GetActiveTile().AddJob(j); };
         queue.OfferJob(job);
     }
 

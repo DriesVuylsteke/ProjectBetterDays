@@ -34,9 +34,9 @@ public class ConstructionJob : Job
 		}
 	}
 
-    protected override void OnJobCancelled(Job job)
+    protected override void OnJobDeleted(Job job)
     {
-        base.OnJobCancelled(job);
+        base.OnJobDeleted(job);
         Addition.tile.RemoveTileAddition();
     }
 

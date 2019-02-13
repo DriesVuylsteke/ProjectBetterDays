@@ -7,7 +7,6 @@ using System.Xml;
 public abstract class Job {
 
 	public event Action<Job> OnJobComplete;
-    public event Action<Job> OnJobCancel;
     public event Action<Job> OnJobDelete;
     public event Action<Job> OnJobDestinationUpdated;
 
@@ -37,7 +36,7 @@ public abstract class Job {
 	public Job(){
 		StandOnDestination = false;
 
-        OnJobCancel += OnJobCancelled;
+        OnJobDelete += OnJobDeleted;
 	}
 
     /// <summary>
@@ -78,19 +77,13 @@ public abstract class Job {
         // Clean up the job after it is done (lets assume no job is repeatable, 
         // for repeatable jobs someone will queue it several times? or perhaps we addd a property later)
         OnJobComplete = null;
-        OnJobCancel = null;
+        OnJobDelete = null;
 	}
 
     /// <summary>
-    /// An outside source tells the job it should be cancelled
+    /// An outside source tells the job it should be deleted
     /// For example, this could be because the job isn't reachable anymore.
     /// </summary>
-    public virtual void CancelJob()
-    {
-        if (OnJobCancel != null)
-            OnJobCancel(this);
-    }
-
     public void DeleteJob()
     {
         if(OnJobDelete != null)
@@ -108,7 +101,13 @@ public abstract class Job {
     /// <returns></returns>
     public abstract Skills GetJobType();
 
-    protected virtual void OnJobCancelled(Job job) { }
+    protected virtual void OnJobDeleted(Job job) { }
+
+    /// <summary>
+    /// Determines the tile the job is currently active at.
+    /// </summary>
+    /// <returns>The jobs current tile that requires work</returns>
+    public virtual Tile GetActiveTile() { return DestinationTile;  }
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// 

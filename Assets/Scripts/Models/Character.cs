@@ -148,7 +148,6 @@ public class Character {
         {
             if(currentJob != null && currentJob != value)
             {
-                currentJob.OnJobCancel -= OnJobCancel;
                 currentJob.OnJobComplete -= OnJobComplete;
                 currentJob.OnJobDelete -= OnJobDelete;
                 currentJob.OnJobDestinationUpdated -= OnJobDestinationChanged;
@@ -157,7 +156,6 @@ public class Character {
             currentJob = value;
             if (currentJob != null)
             {
-                currentJob.OnJobCancel += OnJobCancel;
                 currentJob.OnJobComplete += OnJobComplete;
                 currentJob.OnJobDelete += OnJobDelete;
                 currentJob.OnJobDestinationUpdated += OnJobDestinationChanged;
@@ -251,8 +249,8 @@ public class Character {
 
                 if(NextTile == null) // The pathfinding does not know where to go. Delete the current job, since only a job can make a character move
                 {
-                    Debug.Log("Cancelling job");
-                    CurrentJob.CancelJob();
+                    Debug.Log("Deleting job");
+                    CurrentJob.DeleteJob();
                     return;
                 }
 			}
@@ -395,22 +393,6 @@ public class Character {
 			Debug.LogError ("A job that isn't our current job has told us it's complete, did you forget to unregister?");
 		}
 	}
-
-    void OnJobCancel(Job job)
-    {
-        // For now it does the exact same thing as completing the job, but later we might want to differentiate so for now I'm leaving the duplicate code in.
-        if (job == CurrentJob)
-        {
-            Debug.Log("Job cancelled");
-            CurrentJob = null;
-            DestTile = CurrTile;
-            jobReached = false;
-        }
-        else
-        {
-            Debug.LogError("A job that isn't our current job has told us it's being cancelled, did you forget to unregister?");
-        }
-    }
 
     void OnJobDelete(Job job)
     {

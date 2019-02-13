@@ -10,6 +10,9 @@ public class BuildController : MonoBehaviour {
 	MouseController mouseController;
 	TileSpriteController spriteController;
 
+    // A script that displays the jobs a character can perform at a certain tile
+    public TileJobList tileJobList;
+
 	World world { get { return WorldController.instance.world; } }
 
 	public float buildDelayStart;
@@ -115,13 +118,8 @@ public class BuildController : MonoBehaviour {
 				state.MouseButton1Down();
             else
             {
-                // TODO: move this in its own characterSelected state?
-                if (SelectedCharacter != null)
-                {
-                    // We aren't doing anything, so rmb should move the character
-                    Tile curTile = mouseController.GetTileUnderMouse();
-                    SelectedCharacter.OverrideJob(new MovementJob(curTile));
-                }
+                // We aren't building, call the TileJobList to display a list of active jobs on the current tile
+                tileJobList.Mouse1Down(SelectedCharacter, mouseController.GetTileUnderMouse());
             }
 		}
 	}

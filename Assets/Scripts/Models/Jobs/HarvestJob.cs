@@ -37,9 +37,9 @@ public class HarvestJob : Job
         }
     }
 
-    protected override void OnJobCancelled(Job job)
+    protected override void OnJobDeleted(Job job)
     {
-        base.OnJobCancelled(job);
+        base.OnJobDeleted(job);
     }
 
     protected override void WriteAdditionalXmlProperties(XmlWriter writer)
