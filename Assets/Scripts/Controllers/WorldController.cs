@@ -11,6 +11,8 @@ public class WorldController : MonoBehaviour {
 	public static WorldController instance { get; private set;}
 	public World world { get; private set; }
 
+    protected float worldSpeed = 1;
+
 	private Color[] colors = new Color[] { Color.grey, Color.black, Color.cyan, Color.magenta};
 	static bool loadWorld = false;
 
@@ -29,8 +31,35 @@ public class WorldController : MonoBehaviour {
 	}
 
 	void Update(){
-		world.Update (Time.deltaTime);
+        if (Input.GetAxis("GamePause") == 1)
+        {
+            SetWorldSpeed(0);
+        }
+        else if (Input.GetAxis("GameSpeed1") == 1)
+        {
+            SetWorldSpeed(1);
+        }
+        else if (Input.GetAxis("GameSpeed2") == 1)
+        {
+            SetWorldSpeed(2);
+        }
+        else if (Input.GetAxis("GameSpeed3") == 1)
+        {
+            SetWorldSpeed(4);
+        }
+
+        world.Update (Time.deltaTime * worldSpeed);
 	}
+
+    /// <summary>
+    /// Used for setting the world speed through gui interaction
+    /// </summary>
+    /// <param name="speed"></param>
+    public void SetWorldSpeed(int speed)
+    {
+        worldSpeed = speed;
+        Debug.Log("Setting game speed to " + speed);
+    }
 
 	void OnDrawGizmos(){
 		if (world == null || world.GetRooms() == null)
