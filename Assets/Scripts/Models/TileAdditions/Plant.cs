@@ -80,10 +80,6 @@ public abstract class Plant : TileAddition
         harvestJob.OnJobComplete += (job) =>
         {
             PlantHarvested(job);
-
-            // TODO: this should probably go somewhere useful
-            HaulJob haul = new HaulJob(tile, tile.world.GetTileAt(tile.X, tile.Y - 2));
-            tile.world.Jobs.EnqueueJob(haul);
         };
         tile.world.Jobs.EnqueueJob(harvestJob);
     }

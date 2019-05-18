@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Represents an item stack, These stacks can be on the ground or in a tile entity (like a closet for example)
+/// Represents an item stack, These stacks can be on the ground or in a tile entity (like a closet for example). An isntance of this object
+/// is used to represent items in the game.
 /// </summary>
 public class ItemStack
 {
@@ -21,7 +22,57 @@ public class ItemStack
         stack.Enqueue(item);
     }
 
+    // Duplicates an itemstack so it can be manipulated independant of the original instance
+    private ItemStack(ItemStack other)
+    {
+        stackType = other.stackType;
+        maxStackSize = other.maxStackSize;
+        this.stack = new Queue<Item>();
+        foreach(Item item in other.stack)
+        {
+            stack.Enqueue(item.DuplicateItem());
+        }
+    }
+
     public event Action<ItemStack> StackDepleted;
+
+    /// <summary>
+    /// Attempts to merge another stack into this item Stack without actually merging the other into this ItemStack
+    /// Useful to see if you were to merge two stacks what the result on the other stack would be.
+    /// </summary>
+    /// <param name="other">The other item stack to merge into this one, this instance is not manipulated during this method</param>
+    /// <returns></returns>
+    public ItemStack MergeResult(ItemStack other)
+    {
+        // The instance we work with is now a copy of the passed instance and will no longer manipulate the original instance
+        other = new ItemStack(other);
+        if (other.GetStackType() != this.GetStackType())
+        {
+            // The two stacks contain different items, you can never merge them
+            return other;
+        }
+
+        int overflow = stack.Count + other.stack.Count - maxStackSize;
+        // At this point the stacks are of the same type, this means we can merge them but might still be restricted by the stack size
+        if (overflow > 0)
+        {
+            // The stack would become too big, only merge part of it and return the excess
+            int takeN = other.stack.Count - overflow;
+            while (takeN > 0)
+            {
+                other.Take();
+                takeN--;
+            }
+            return other;
+        }
+
+        // If there is no overflow just drain the other stack entirely
+        for (int i = other.stack.Count; i > 0; i--)
+        {
+            other.Take();
+        }
+        return null;
+    }
 
     /// <summary>
     /// Attempts to merge another stack into this item Stack

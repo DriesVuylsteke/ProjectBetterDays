@@ -69,7 +69,7 @@ public abstract class TileAddition
 	/// <param name="amount">Amount.</param>
 	public virtual float DoWork(float amount){
 		if (amount > 0 && BuildPercentage < 1) {
-			// Build the tile if it isn't built yet
+            // Build the tile if it isn't built yet
 			BuildPercentage += (amount / constructionCost);
 			if (BuildPercentage >= 1) {
 				BuildPercentage = 1;
@@ -141,14 +141,21 @@ public abstract class TileAddition
     /// <returns>The itemstack that remains after adding it to this tile addition</returns>
     public virtual ItemStack AddItemStackToTileAddition(ItemStack stack) { return stack; }
 
-        #region Serialization
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// 
-        /// 										SERIALIZATION
-        /// 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Checks to see if the tile addition could contain the entire ItemStack
+    /// </summary>
+    /// <param name="stack">the stack to add</param>
+    /// <returns>True if the tile addition can contain the entire ItemStack</returns>
+    public virtual bool CanAddItemStackToTileAddition(ItemStack stack) { return false; }
 
-        public void WriteXml (XmlWriter writer) {
+    #region Serialization
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// 
+    /// 										SERIALIZATION
+    /// 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void WriteXml (XmlWriter writer) {
 		writer.WriteStartElement ("Addition");
 
 		writer.WriteAttributeString ("TypePath", this.GetType().FullName);

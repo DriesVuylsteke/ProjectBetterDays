@@ -25,10 +25,22 @@ public class HaulJob : Job
     {
         // Pick up the stack once
         if (pawnThatPickedUpItem == null)
-        {
-            pawnDoingJob.HeldItem = DestinationTile.TakeItemStackFromTile(pawnDoingJob.HeldItem);
-            pawnThatPickedUpItem = pawnDoingJob;
-            DestinationTile = dropoff;
+        {// On pickup do this
+
+            // Check if the destination can still contain the item, if not discard the job
+            if (dropoff.CanAddItemStackToTile(DestinationTile.ItemStack))
+            {
+                // We can still deliver the item, continue
+                pawnDoingJob.HeldItem = DestinationTile.TakeItemStackFromTile(pawnDoingJob.HeldItem);
+                pawnThatPickedUpItem = pawnDoingJob;
+                DestinationTile = dropoff;
+            } else
+            {
+                // Complete the job
+                JobComplete();
+            }
+
+            
         } else
         {
             // We should have the item in our inventory so drop it, no work will be done if we aren't on top of the tile

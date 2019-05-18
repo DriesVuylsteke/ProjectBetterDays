@@ -35,11 +35,12 @@ public class Tile {
     public TileAddition Addition { get; private set; }
     bool borderDefinition;
 
+    // Represents the current itemStack on the tile
     private ItemStack itemStack;
-    private ItemStack ItemStack
+    public ItemStack ItemStack
     {
         get { return itemStack; }
-        set
+        private set
         {
             if(value != itemStack)
             {
@@ -126,7 +127,43 @@ public class Tile {
     }
 
     /// <summary>
-    /// Attempts to put the item stack on the tile
+    /// Checks if the itemstack could be put on the tile, or inside the present tile addition
+    /// </summary>
+    /// <param name="stack"></param>
+    /// <returns></returns>
+    public bool CanAddItemStackToTile(ItemStack stack)
+    {
+        if (Addition != null)
+        {
+            // First try to put the itemstack in the tile addition if possible
+            if (Addition.CanAddItemStackToTileAddition(stack))
+                return true;
+
+            if (!Addition.CanContainItemOnTile(stack))
+            {
+                // Now that the tile addition is full, can we put the stack on top?
+                // if not end the execution here
+                return false;
+            }
+            // Else we continue to try and put the itemstack on top of the tile
+        }
+
+        // At this point the item will end up on the floor, if the floor is full the item just gets deleted
+
+        // If there is an itemstack, try to merge them, if the resulting itemstack (meaning some items weren't merged) is not null
+        // The item stack wasn't fully added to this tile so return false
+        if (ItemStack != null)
+        {
+            return ItemStack.MergeResult(stack) == null;
+        }
+
+        // If we haven't returned at this point the tile contained no items and no tile addition that holds the item
+        // Any regular tile can contain an itemstack (for now, for example if we add in a water tile this might not be possible)
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to put the item stack on the tile, or in the present tile addition
     /// Putting an item inside a tile addition has priority on putting it on top of the tile
     /// </summary>
     /// <param name="stack"></param>
@@ -153,7 +190,8 @@ public class Tile {
             // Else we continue to try and put the itemstack on top of the tile
         }
         
-
+        // At this point the item will end up on the floor, if the floor is full the item just gets deleted
+        
         // If there is an itemstack, try to merge them, if the resulting itemstack (meaning some items weren't merged) is not null
         // The item stack wasn't fully added to this tile so return false
         if(ItemStack != null)
@@ -166,6 +204,19 @@ public class Tile {
 
         // Assign the itemstack to this tile
         ItemStack = stack;
+
+        // we can't have items lying around. Anything that is dropped on the floor and becomes an itemstack should be queued to be stored
+        // In case there is no storage available the user should be able to store the itemstacks later on with a command
+        // If the stack has a location to be stored, create the job for it.
+        ItemContainer c = world.storageContainers.GetContainerToStoreItemStack(ItemStack, this);
+        Debug.Log("Item dropped on the floor and going to: " + c);
+        if(c != null)
+        {
+            HaulJob job = new HaulJob(this, c.tile);
+            world.Jobs.EnqueueJob(job);
+            Debug.Log("Found container for dropped item and made haul job");
+        }
+
         return ItemStack;
     }
 

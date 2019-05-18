@@ -161,11 +161,17 @@ public class BuildController : MonoBehaviour {
 		State = new BuildAdditionState (mouseController, this, new Wall(null), Skills.Construction);
 	}
 
-	public void BuildMode_Door(){
-		State = new BuildAdditionState (mouseController, this, new Door(null), Skills.Construction);
-	}
+    public void BuildMode_Door()
+    {
+        State = new BuildAdditionState(mouseController, this, new Door(null), Skills.Construction);
+    }
 
-	public void BuildMode_BulldozeAddition(){
+    public void BuildMode_Chest()
+    {
+        State = new BuildAdditionState(mouseController, this, new ItemContainer(null), Skills.Construction);
+    }
+
+    public void BuildMode_BulldozeAddition(){
 		State = new BuildAdditionState (mouseController, this, null, Skills.Construction);
 	}
 

@@ -15,6 +15,8 @@ public class World : IXmlSerializable{
 	protected List<Room> rooms;
 	public List<Room> GetRooms() { return rooms; }
 
+    public StorageContainers storageContainers { get; protected set; }
+
 	protected List<Character> characters;
 	public List<Character> GetCharacters() { return characters; }
     public event Action<Character> OnCharacterAdded;
@@ -54,6 +56,7 @@ public class World : IXmlSerializable{
 		rooms = new List<Room> ();
 		characters = new List<Character>();
 		Jobs = new JobQueue (this);
+        storageContainers = new StorageContainers();
 
 		tiles = new Tile[width, height];
 
