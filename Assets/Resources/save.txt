@@ -86,7 +86,9 @@
     <Tile X="49" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="48" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="49" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="49" Y="50" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="49" Y="50" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="ItemContainer" Name="Chest" Orientation="0" RenderString="" MovementCost="1" BuildPercentage="1" Progress="0" />
+    </Tile>
     <Tile X="49" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="49" Y="53" DefinesRoomBorder="False" TileType="1" />
@@ -103,9 +105,7 @@
     <Tile X="50" Y="49" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="51" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="50" Y="52" DefinesRoomBorder="True" TileType="1">
-      <Addition TypePath="Wall" Name="Wall" Orientation="0" RenderString="" MovementCost="0" BuildPercentage="1" Progress="0" />
-    </Tile>
+    <Tile X="50" Y="52" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="53" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="54" DefinesRoomBorder="False" TileType="1" />
     <Tile X="50" Y="55" DefinesRoomBorder="True" TileType="1">
@@ -132,11 +132,13 @@
     <Tile X="52" Y="46" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="47" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="48" DefinesRoomBorder="False" TileType="1" />
-    <Tile X="52" Y="49" DefinesRoomBorder="False" TileType="1" />
+    <Tile X="52" Y="49" DefinesRoomBorder="False" TileType="1">
+      <Addition TypePath="Tomato" Name="Tomato" Orientation="0" RenderString="" MovementCost="0,5" BuildPercentage="1" Progress="0,1514468" />
+    </Tile>
     <Tile X="52" Y="50" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="51" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="52" DefinesRoomBorder="False" TileType="1">
-      <Addition TypePath="Soil" Name="Soil" Orientation="0" RenderString="" MovementCost="0.75" BuildPercentage="1" Progress="0" />
+      <Addition TypePath="Tomato" Name="Tomato" Orientation="0" RenderString="" MovementCost="0,5" BuildPercentage="1" Progress="0,4768322" />
     </Tile>
     <Tile X="52" Y="53" DefinesRoomBorder="False" TileType="1" />
     <Tile X="52" Y="54" DefinesRoomBorder="False" TileType="1" />
@@ -208,11 +210,11 @@
     </Tile>
   </Tiles>
   <Rooms>
-    <Room X="50" Y="53" Temperature="0" Oxygen="0" />
+    <Room X="50" Y="50" Temperature="0" Oxygen="0" />
   </Rooms>
   <Characters>
-    <Character Skill0="1" Skill1="1.032333" Skill2="1" Skill3="1" Priorities="2" Priority0="Construction" Priority1="Plant" X="50" Y="51" />
-    <Character Skill0="1.000282" Skill1="1" Skill2="1.016436" Skill3="1" Priorities="2" Priority0="Plant" Priority1="Construction" X="52" Y="50" />
+    <Character Skill0="1" Skill1="1,016676" Skill2="1,032638" Skill3="1" Priorities="2" Priority0="Construction" Priority1="Plant" X="51" Y="50" />
+    <Character Skill0="1" Skill1="1" Skill2="1,01646" Skill3="1" Priorities="2" Priority0="Construction" Priority1="Plant" X="52" Y="50" />
   </Characters>
   <JobQueue />
 </World>

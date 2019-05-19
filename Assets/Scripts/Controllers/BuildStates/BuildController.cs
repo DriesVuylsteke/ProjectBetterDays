@@ -9,6 +9,10 @@ public class BuildController : MonoBehaviour {
 
 	MouseController mouseController;
 	TileSpriteController spriteController;
+    [SerializeField]
+    ItemContainerDisplay itemContainer;
+    [SerializeField]
+    protected ToggleActionGroups groupsController;
 
     // A script that displays the jobs a character can perform at a certain tile
     public TileJobList tileJobList;
@@ -35,7 +39,7 @@ public class BuildController : MonoBehaviour {
 			}
 
             if (state != null && state.GetTooltipSpriteName () != null) {
-				cursorGO.GetComponent<SpriteRenderer> ().sprite = spriteController.GetSprite (state.GetTooltipSpriteName ());
+				cursorGO.GetComponent<SpriteRenderer> ().sprite = TileSpriteController.GetSprite (state.GetTooltipSpriteName ());
 			} else {
 				cursorGO.GetComponent<SpriteRenderer> ().sprite = null;
 			}
@@ -104,6 +108,17 @@ public class BuildController : MonoBehaviour {
 				Character c = world.GetCharacterAt (mouseController.GetTileUnderMouse ());
 				if (c != null)
 					SelectedCharacter = c;
+                else
+                {
+                    // No character under the tile, perhaps there is an item container?
+                    Tile t = mouseController.GetTileUnderMouse();
+                    if(t.Addition != null && t.Addition is ItemContainer)
+                    {
+                        // The mouse clicked on a tile holding an item container, display the gui and pass the container
+                        itemContainer.SetContainer((ItemContainer)t.Addition);
+                        groupsController.EnableInventoryDisplay();
+                    }
+                }
 			} else {
 				state.MouseButton0Down ();
 			}

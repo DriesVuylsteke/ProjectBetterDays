@@ -35,6 +35,7 @@ public class ItemStack
     }
 
     public event Action<ItemStack> StackDepleted;
+    public event Action<ItemStack> StackCountUpdated;
 
     /// <summary>
     /// Attempts to merge another stack into this item Stack without actually merging the other into this ItemStack
@@ -95,7 +96,7 @@ public class ItemStack
             int takeN = other.stack.Count - overflow;
             while(takeN > 0)
             {
-                stack.Enqueue(other.Take());
+                AddItem(other.Take());
                 takeN--;
             }
             return other;
@@ -104,7 +105,7 @@ public class ItemStack
         // If there is no overflow just drain the other stack entirely
         for(int i = other.stack.Count; i > 0; i--)
         {
-            stack.Enqueue(other.Take());
+            AddItem(other.Take());
         }
         return null;
     }
@@ -125,6 +126,7 @@ public class ItemStack
         if(stack.Count < this.maxStackSize)
         {
             stack.Enqueue(item);
+            StackCountUpdated?.Invoke(this);
             return true;
         }
         return false;
@@ -156,8 +158,18 @@ public class ItemStack
         }
     }
     
+    public float GetCurrentStackSize()
+    {
+        return stack.Count;
+    }
+
     public string GetStackType()
     {
         return stackType;
+    }
+
+    public override string ToString()
+    {
+        return stackType + ":" + stack.Count;
     }
 }

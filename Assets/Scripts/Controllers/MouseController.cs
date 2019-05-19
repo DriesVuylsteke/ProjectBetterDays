@@ -45,6 +45,7 @@ public class MouseController : MonoBehaviour {
 			return;
 		}
 
+
 		if (Input.GetMouseButtonDown (0)) {
 			mousePressPos = Input.mousePosition;
 			mousePressWorldPos = GetMouseInWorldCoordinates ();

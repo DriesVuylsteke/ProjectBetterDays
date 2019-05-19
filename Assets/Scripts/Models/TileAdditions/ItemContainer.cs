@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class ItemContainer : TileAddition
     // A list of all itemStacks currently present in the container
     protected List<ItemStack> stacks;
     protected int maxAmountOfStacks;
+
+    // Called when an itemStack is removed from the container or one is added
+    public event Action<ItemStack[]> OnStacksModified;
 
 
     public ItemContainer(Tile tile) : base(tile)
@@ -34,6 +38,11 @@ public class ItemContainer : TileAddition
 
         stacks = new List<ItemStack>();
         TileAdditionBuilt += ContainerBuilt;
+    }
+
+    public ItemStack[] GetStoredItemStacks()
+    {
+        return stacks.ToArray();
     }
 
     /// <summary>
@@ -85,6 +94,7 @@ public class ItemContainer : TileAddition
         if(stacks.Count < maxAmountOfStacks)
         {
             stacks.Add(stack);
+            OnStacksModified?.Invoke(GetStoredItemStacks());
             return null;
         }
         return stack;

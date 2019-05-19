@@ -8,10 +8,19 @@ public class ToggleActionGroups : MonoBehaviour
     protected GameObject build, character;
     [SerializeField]
     protected DisplayCharacterDetails characterDetails;
+    [SerializeField]
+    protected GameObject inventoryDisplay;
 
     public void ToggleBuild()
     {
         ToggleActive(build);
+    }
+
+    public void EnableInventoryDisplay()
+    {
+        if (inventoryDisplay.activeSelf)
+            return;
+        ToggleActive(inventoryDisplay);
     }
 
     public void ToggleCharacter()
@@ -43,5 +52,6 @@ public class ToggleActionGroups : MonoBehaviour
             characterDetails.DeselectCharacter();
         }
         character.SetActive(false);
+        inventoryDisplay.SetActive(false);
     }
 }

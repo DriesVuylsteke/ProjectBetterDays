@@ -8,9 +8,9 @@ public class TileSpriteController : MonoBehaviour {
 	Dictionary<Tile, GameObject> additionGOMap;
     Dictionary<Tile, GameObject> itemStackGOMap;
 
-    Dictionary<string, Sprite> tileSprites;
-	Dictionary<string, Sprite> additionSprites;
-    Dictionary<string, Sprite> itemSprites;
+    static Dictionary<string, Sprite> tileSprites;
+	static Dictionary<string, Sprite> additionSprites;
+    static Dictionary<string, Sprite> itemSprites;
 
 	World world { get { return WorldController.instance.world; } }
 
@@ -134,7 +134,7 @@ public class TileSpriteController : MonoBehaviour {
         }
     }
 
-    public Sprite GetSprite(string spriteName){
+    public static Sprite GetSprite(string spriteName){
 		if (tileSprites.ContainsKey (spriteName)) {
 			return tileSprites [spriteName];
 		} else if (additionSprites.ContainsKey(spriteName))
